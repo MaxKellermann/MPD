@@ -22,6 +22,7 @@
 #include "Interface.hxx"
 #include "song/LightSong.hxx"
 #include "tag/Tag.hxx"
+#include "tag/Type.h"
 
 #include <set>
 
@@ -34,38 +35,32 @@ struct StringLess {
 	}
 };
 
-using StringSet = std::set<const char *, StringLess>;
+using StringSet  = std::set<const char *, StringLess>;
+using TagsValues = std::array<StringSet, TagType::TAG_NUM_OF_ITEM_TYPES>;
+using TagsCounts = std::array<unsigned,  TagType::TAG_NUM_OF_ITEM_TYPES>;
 
 static void
-StatsVisitTag(DatabaseStats &stats, StringSet &artists, StringSet &albums,
+StatsVisitTag(DatabaseStats &stats, TagsValues &tags_values,
 	      const Tag &tag) noexcept
 {
 	if (!tag.duration.IsNegative())
 		stats.total_duration += tag.duration;
 
 	for (const auto &item : tag) {
-		switch (item.type) {
-		case TAG_ARTIST:
-			artists.emplace(item.value);
-			break;
-
-		case TAG_ALBUM:
-			albums.emplace(item.value);
-			break;
-
-		default:
-			break;
+		TagType tag_type = item.type;
+		if (tag_type < TagType::TAG_NUM_OF_ITEM_TYPES) {
+			tags_values[tag_type].emplace(item.value);
 		}
 	}
 }
 
 static void
-StatsVisitSong(DatabaseStats &stats, StringSet &artists, StringSet &albums,
+StatsVisitSong(DatabaseStats &stats, TagsValues &tags_values,
 	       const LightSong &song) noexcept
 {
 	++stats.song_count;
 
-	StatsVisitTag(stats, artists, albums, song.tag);
+	StatsVisitTag(stats, tags_values, song.tag);
 }
 
 DatabaseStats
@@ -74,14 +69,24 @@ GetStats(const Database &db, const DatabaseSelection &selection)
 	DatabaseStats stats;
 	stats.Clear();
 
-	StringSet artists, albums;
+	TagsValues tags_values;
+
 	using namespace std::placeholders;
 	const auto f = std::bind(StatsVisitSong,
-				 std::ref(stats), std::ref(artists),
-				 std::ref(albums), _1);
+				 std::ref(stats),
+				 std::ref(tags_values),
+				 _1);
 	db.Visit(selection, f);
 
-	stats.artist_count = artists.size();
-	stats.album_count = albums.size();
+	TagsValues::const_iterator values      = tags_values.begin();
+	TagsCounts::iterator count             = stats.tag_counts.begin();
+	TagsCounts::const_iterator counts_end  = stats.tag_counts.end();
+
+	static_assert(tags_values.size() == stats.tag_counts.size());
+
+	while (count != counts_end) {
+		*count++ = values++->size();
+	}
+
 	return stats;
 }

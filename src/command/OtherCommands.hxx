@@ -57,6 +57,9 @@ CommandResult
 handle_stats(Client &client, Request request, Response &response);
 
 CommandResult
+handle_tagstats(Client &client, Request request, Response &response);
+
+CommandResult
 handle_config(Client &client, Request request, Response &response);
 
 CommandResult

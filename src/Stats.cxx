@@ -28,6 +28,9 @@
 #include "db/Stats.hxx"
 #include "Log.hxx"
 #include "time/ChronoUtil.hxx"
+#include "tag/Mask.hxx"
+#include "tag/Settings.hxx"
+#include "client/Client.hxx"
 
 #ifdef _WIN32
 #include "system/Clock.hxx"
@@ -101,8 +104,8 @@ db_stats_print(Response &r, const Database &db)
 		 "albums: %u\n"
 		 "songs: %u\n"
 		 "db_playtime: %u\n",
-		 stats.artist_count,
-		 stats.album_count,
+		 stats.tag_counts[TagType::TAG_ARTIST],
+		 stats.tag_counts[TagType::TAG_ALBUM],
 		 stats.song_count,
 		 total_duration_s);
 
@@ -110,6 +113,23 @@ db_stats_print(Response &r, const Database &db)
 	if (!IsNegative(update_stamp))
 		r.Format("db_update: %lu\n",
 			 (unsigned long)std::chrono::system_clock::to_time_t(update_stamp));
+}
+
+static void
+db_tagstats_print(Response &r, const Database &db)
+{
+	if (!stats_update(db))
+		return;
+
+	TagMask tag_mask = global_tag_mask & r.GetTagMask();
+
+	for (unsigned type = TagType::TAG_BEGIN;
+		 type < TagType::TAG_END;
+		 ++type) {
+		if (tag_mask.Test(static_cast<TagType>(type))) {
+			r.Format("%s: %u\n", tag_item_names[type], stats.tag_counts[type]);
+		}
+	}
 }
 
 #endif
@@ -132,5 +152,15 @@ stats_print(Response &r, const Partition &partition)
 	const Database *db = partition.instance.GetDatabase();
 	if (db != nullptr)
 		db_stats_print(r, *db);
+#endif
+}
+
+void
+tagstats_print(Response &r, const Partition &partition)
+{
+#ifdef ENABLE_DATABASE
+	const Database *db = partition.instance.GetDatabase();
+	if (db != nullptr)
+		db_tagstats_print(r, *db);
 #endif
 }

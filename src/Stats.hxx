@@ -29,4 +29,7 @@ stats_invalidate();
 void
 stats_print(Response &r, const Partition &partition);
 
+void
+tagstats_print(Response &r, const Partition &partition);
+
 #endif

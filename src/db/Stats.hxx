@@ -21,6 +21,8 @@
 #define MPD_DATABASE_STATS_HXX
 
 #include "Chrono.hxx"
+#include "tag/Type.h"
+#include <array>
 
 struct DatabaseStats {
 	/**
@@ -34,19 +36,14 @@ struct DatabaseStats {
 	std::chrono::duration<std::uint64_t, SongTime::period> total_duration;
 
 	/**
-	 * Number of distinct artist names.
+	 * Number of distinct tag values for each of the tags defined in enum TagType.
 	 */
-	unsigned artist_count;
-
-	/**
-	 * Number of distinct album names.
-	 */
-	unsigned album_count;
+	std::array<unsigned, TagType::TAG_NUM_OF_ITEM_TYPES> tag_counts;
 
 	void Clear() {
 		song_count = 0;
 		total_duration = total_duration.zero();
-		artist_count = album_count = 0;
+		tag_counts.fill(0);
 	}
 };
 

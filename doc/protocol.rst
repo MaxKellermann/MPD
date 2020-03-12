@@ -1240,6 +1240,19 @@ Connection settings
     Announce that this client is interested in all tag
     types.  This is the default setting for new clients.
 
+:command:`tagstats`
+    Shows a list of available tag types with the number of unique values for each tag type.
+
+    Example::
+
+     tagstats
+     Artist: 217
+     ArtistSort: 27
+     Album: 178
+     AlbumSort: 0
+     ...
+     OK
+
 .. _partition_commands:
 
 Partition commands

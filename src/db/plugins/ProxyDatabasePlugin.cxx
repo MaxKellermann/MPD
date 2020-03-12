@@ -1074,8 +1074,8 @@ ProxyDatabase::GetStats(const DatabaseSelection &selection) const
 	DatabaseStats stats;
 	stats.song_count = mpd_stats_get_number_of_songs(stats2);
 	stats.total_duration = std::chrono::seconds(mpd_stats_get_db_play_time(stats2));
-	stats.artist_count = mpd_stats_get_number_of_artists(stats2);
-	stats.album_count = mpd_stats_get_number_of_albums(stats2);
+	stats.tag_counts[TagType::TAG_ARTIST] = mpd_stats_get_number_of_artists(stats2);
+	stats.tag_counts[TagType::TAG_ALBUM] = mpd_stats_get_number_of_albums(stats2);
 	mpd_stats_free(stats2);
 	return stats;
 }

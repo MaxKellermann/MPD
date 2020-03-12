@@ -367,6 +367,13 @@ handle_stats(Client &client, gcc_unused Request args, Response &r)
 }
 
 CommandResult
+handle_tagstats(Client &client, gcc_unused Request args, Response &r)
+{
+	tagstats_print(r, client.GetPartition());
+	return CommandResult::OK;
+}
+
+CommandResult
 handle_config(Client &client, gcc_unused Request args, Response &r)
 {
 	if (!client.IsLocal()) {

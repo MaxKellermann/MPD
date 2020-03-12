@@ -23,10 +23,15 @@
 #include "Type.h"
 
 #include <stdint.h>
+#include <climits>
 
 class TagMask {
 	typedef uint_least32_t mask_t;
 	mask_t value;
+
+	static_assert(sizeof(mask_t) * CHAR_BIT 
+					>= TagType::TAG_NUM_OF_ITEM_TYPES,
+					"too many tag types for size of defined tag mask type");
 
 	explicit constexpr TagMask(uint_least32_t _value) noexcept
 		:value(_value) {}
