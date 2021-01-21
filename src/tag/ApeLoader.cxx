@@ -73,16 +73,16 @@ try {
 	unsigned n = FromLE32(footer.count);
 	const char *p = buffer.get();
 	while (n-- && remaining > 10) {
-		size_t size = FromLE32(*(const uint32_t *)p);
+		size_t size = FromLE32(*reinterpret_cast<const uint32_t *>(p));
 		p += 4;
 		remaining -= 4;
-		unsigned long flags = FromLE32(*(const uint32_t *)p);
+		unsigned long flags = FromLE32(*reinterpret_cast<const uint32_t *>(p));
 		p += 4;
 		remaining -= 4;
 
 		/* get the key */
 		const char *key = p;
-		const char *key_end = (const char *)std::memchr(p, '\0', remaining);
+		const char *key_end = static_cast<const char *>(std::memchr(p, '\0', remaining));
 		if (key_end == nullptr)
 			break;
 

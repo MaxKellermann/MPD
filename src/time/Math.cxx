@@ -78,7 +78,7 @@ IncrementDay(struct tm &tm) noexcept
 
 	++tm.tm_mday;
 
-	if ((unsigned)tm.tm_mday > max_day) {
+	if (unsigned(tm.tm_mday) > max_day) {
 		/* roll over to next month */
 		tm.tm_mday = 1;
 		IncrementMonth(tm);

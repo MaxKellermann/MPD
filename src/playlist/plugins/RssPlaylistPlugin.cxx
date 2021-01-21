@@ -64,7 +64,7 @@ static void XMLCALL
 rss_start_element(void *user_data, const XML_Char *element_name,
 		  const XML_Char **atts)
 {
-	auto *parser = (RssParser *)user_data;
+	auto *parser = static_cast<RssParser *>(user_data);
 
 	switch (parser->state) {
 	case RssParser::ROOT:
@@ -94,7 +94,7 @@ rss_start_element(void *user_data, const XML_Char *element_name,
 static void XMLCALL
 rss_end_element(void *user_data, const XML_Char *element_name)
 {
-	auto *parser = (RssParser *)user_data;
+	auto *parser = static_cast<RssParser *>(user_data);
 
 	switch (parser->state) {
 	case RssParser::ROOT:
@@ -117,7 +117,7 @@ rss_end_element(void *user_data, const XML_Char *element_name)
 static void XMLCALL
 rss_char_data(void *user_data, const XML_Char *s, int len)
 {
-	auto *parser = (RssParser *)user_data;
+	auto *parser = static_cast<RssParser *>(user_data);
 
 	switch (parser->state) {
 	case RssParser::ROOT:

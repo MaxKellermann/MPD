@@ -83,7 +83,7 @@ Thread::ThreadProc(LPVOID ctx) noexcept
 void *
 Thread::ThreadProc(void *ctx) noexcept
 {
-	Thread &thread = *(Thread *)ctx;
+	Thread &thread = *static_cast<Thread *>(ctx);
 
 #ifndef NDEBUG
 	thread.inside_handle = pthread_self();

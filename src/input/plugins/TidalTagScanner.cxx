@@ -140,7 +140,7 @@ TidalTagScanner::ResponseParser::Integer(long long value) noexcept
 
 	case State::DURATION:
 		if (map_depth == 1 && value > 0)
-			tag.SetDuration(SignedSongTime::FromS((unsigned)value));
+			tag.SetDuration(SignedSongTime::FromS(unsigned(value)));
 		break;
 	}
 

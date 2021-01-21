@@ -255,7 +255,7 @@ EventLoop::Wait(Event::Duration timeout) noexcept
 		poll_backend.ReadEvents(ExportTimeoutMS(timeout));
 
 	for (size_t i = 0; i < poll_result.GetSize(); ++i) {
-		auto &socket_event = *(SocketEvent *)poll_result.GetObject(i);
+		auto &socket_event = *static_cast<SocketEvent *>(poll_result.GetObject(i));
 		socket_event.SetReadyFlags(poll_result.GetEvents(i));
 
 		/* move from "sockets" to "ready_sockets" */

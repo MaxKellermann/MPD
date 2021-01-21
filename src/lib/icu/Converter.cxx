@@ -89,7 +89,7 @@ DoConvert(iconv_t conv, std::string_view src)
 
 	size_t n = iconv(conv, &in, &in_left, &out, &out_left);
 
-	if (n == static_cast<size_t>(-1))
+	if (n == size_t(-1))
 		throw MakeErrno("Charset conversion failed");
 
 	if (in_left > 0)

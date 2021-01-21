@@ -117,7 +117,7 @@ Client::ProcessLine(char *line) noexcept
 					      "[%u] command list size "
 					      "is larger than the max (%lu)",
 					      num,
-					      (unsigned long)client_max_command_list_size);
+					      static_cast<unsigned long>(client_max_command_list_size));
 				return CommandResult::CLOSE;
 			}
 

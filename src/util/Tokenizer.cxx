@@ -83,7 +83,7 @@ Tokenizer::NextWord()
 static inline bool
 valid_unquoted_char(char ch)
 {
-	return (unsigned char)ch > 0x20 && ch != '"' && ch != '\'';
+	return uint8_t(ch) > 0x20 && ch != '"' && ch != '\'';
 }
 
 char *

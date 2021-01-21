@@ -116,7 +116,7 @@ AsyncInputStream::Seek(std::unique_lock<Mutex> &lock,
 			break;
 
 		const size_t nbytes =
-			new_offset - offset < (offset_type)r.size
+			new_offset - offset < offset_type(r.size)
 					       ? new_offset - offset
 					       : r.size;
 
@@ -196,7 +196,7 @@ AsyncInputStream::Read(std::unique_lock<Mutex> &lock,
 	memcpy(ptr, r.data, nbytes);
 	buffer.Consume(nbytes);
 
-	offset += (offset_type)nbytes;
+	offset += offset_type(nbytes);
 
 	if (paused && buffer.GetSize() < resume_at)
 		deferred_resume.Schedule();
@@ -231,7 +231,7 @@ AsyncInputStream::AppendToBuffer(const void *data, size_t append_size) noexcept
 		assert(!w.empty());
 		assert(w.size >= remaining);
 
-		memcpy(w.data, (const uint8_t *)data + nbytes, remaining);
+		memcpy(w.data, static_cast<const uint8_t *>(data) + nbytes, remaining);
 		buffer.Append(remaining);
 	}
 

@@ -206,10 +206,10 @@ SetupHw(snd_pcm_t *pcm,
 						  &channels);
 	if (err < 0)
 		throw FormatRuntimeError("Failed to configure %i channels: %s",
-					 (int)audio_format.channels,
+					 int(audio_format.channels),
 					 snd_strerror(-err));
 
-	audio_format.channels = (int8_t)channels;
+	audio_format.channels = int8_t(channels);
 
 	const unsigned requested_sample_rate =
 		params.CalcOutputSampleRate(audio_format.sample_rate);
@@ -236,7 +236,7 @@ SetupHw(snd_pcm_t *pcm,
 	snd_pcm_hw_params_get_buffer_time_min(hwparams, &buffer_time_min, nullptr);
 	snd_pcm_hw_params_get_buffer_time_max(hwparams, &buffer_time_max, nullptr);
 	FormatDebug(alsa_output_domain, "buffer: size=%u..%u time=%u..%u",
-		    (unsigned)buffer_size_min, (unsigned)buffer_size_max,
+		    unsigned(buffer_size_min), unsigned(buffer_size_max),
 		    buffer_time_min, buffer_time_max);
 
 	snd_pcm_uframes_t period_size_min, period_size_max;
@@ -246,7 +246,7 @@ SetupHw(snd_pcm_t *pcm,
 	snd_pcm_hw_params_get_period_time_min(hwparams, &period_time_min, nullptr);
 	snd_pcm_hw_params_get_period_time_max(hwparams, &period_time_max, nullptr);
 	FormatDebug(alsa_output_domain, "period: size=%u..%u time=%u..%u",
-		    (unsigned)period_size_min, (unsigned)period_size_max,
+		    unsigned(period_size_min), unsigned(period_size_max),
 		    period_time_min, period_time_max);
 
 	if (buffer_time > 0) {

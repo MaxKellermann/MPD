@@ -31,8 +31,8 @@ Client::OnSocketInput(void *data, size_t length) noexcept
 	if (background_command)
 		return InputResult::PAUSE;
 
-	char *p = (char *)data;
-	char *newline = (char *)std::memchr(p, '\n', length);
+	char *p = static_cast<char *>(data);
+	char *newline = static_cast<char *>(std::memchr(p, '\n', length));
 	if (newline == nullptr)
 		return InputResult::MORE;
 

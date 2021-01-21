@@ -54,7 +54,7 @@ struct SndfileInputStream {
 static sf_count_t
 sndfile_vio_get_filelen(void *user_data)
 {
-	const auto &sis = *(SndfileInputStream *)user_data;
+	const auto &sis = *static_cast<SndfileInputStream *>(user_data);
 	const auto &is = sis.is;
 
 	if (!is.KnownSize())
@@ -66,7 +66,7 @@ sndfile_vio_get_filelen(void *user_data)
 static sf_count_t
 sndfile_vio_seek(sf_count_t _offset, int whence, void *user_data)
 {
-	SndfileInputStream &sis = *(SndfileInputStream *)user_data;
+	SndfileInputStream &sis = *static_cast<SndfileInputStream *>(user_data);
 	InputStream &is = sis.is;
 
 	offset_type offset = _offset;
@@ -101,7 +101,7 @@ sndfile_vio_seek(sf_count_t _offset, int whence, void *user_data)
 static sf_count_t
 sndfile_vio_read(void *ptr, sf_count_t count, void *user_data)
 {
-	SndfileInputStream &sis = *(SndfileInputStream *)user_data;
+	SndfileInputStream &sis = *static_cast<SndfileInputStream *>(user_data);
 
 	return sis.Read(ptr, count);
 }
@@ -118,7 +118,7 @@ sndfile_vio_write([[maybe_unused]] const void *ptr,
 static sf_count_t
 sndfile_vio_tell(void *user_data)
 {
-	const auto &sis = *(SndfileInputStream *)user_data;
+	const auto &sis = *static_cast<SndfileInputStream *>(user_data);
 	const auto &is = sis.is;
 
 	return is.GetOffset();
@@ -178,13 +178,13 @@ sndfile_read_frames(SNDFILE *sf, SampleFormat format,
 {
 	switch (format) {
 	case SampleFormat::S16:
-		return sf_readf_short(sf, (short *)buffer, n_frames);
+		return sf_readf_short(sf, static_cast<short *>(buffer), n_frames);
 
 	case SampleFormat::S32:
-		return sf_readf_int(sf, (int *)buffer, n_frames);
+		return sf_readf_int(sf, static_cast<int *>(buffer), n_frames);
 
 	case SampleFormat::FLOAT:
-		return sf_readf_float(sf, (float *)buffer, n_frames);
+		return sf_readf_float(sf, static_cast<float *>(buffer), n_frames);
 
 	default:
 		assert(false);

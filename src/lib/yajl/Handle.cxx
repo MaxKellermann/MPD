@@ -61,7 +61,7 @@ Handle::ThrowError()
 	};
 
 	throw FormatRuntimeError("Failed to parse JSON: %s",
-				 StripErrorMessage((char *)str));
+				 StripErrorMessage(reinterpret_cast<char *>(str)));
 }
 
 } // namespace Yajl

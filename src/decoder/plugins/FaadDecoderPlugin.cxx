@@ -52,8 +52,8 @@ adts_check_frame(const unsigned char *data)
 	if (!((data[0] == 0xFF) && ((data[1] & 0xF6) == 0xF0)))
 		return 0;
 
-	return (((unsigned int)data[3] & 0x3) << 11) |
-		(((unsigned int)data[4]) << 3) |
+	return ((uint32_t(data[3]) & 0x3) << 11) |
+		((uint32_t(data[4])) << 3) |
 		(data[5] >> 5);
 }
 
@@ -71,7 +71,7 @@ adts_find_frame(DecoderBuffer &buffer)
 			return 0;
 
 		/* find the 0xff marker */
-		auto p = (const uint8_t *)std::memchr(data.data, 0xff, data.size);
+		auto p = static_cast<const uint8_t *>(std::memchr(data.data, 0xff, data.size));
 		if (p == nullptr) {
 			/* no marker - discard the buffer */
 			buffer.Clear();
@@ -374,7 +374,7 @@ faad_stream_decode(DecoderClient &client, InputStream &is,
 			FormatNotice(faad_decoder_domain,
 				     "sample rate changed from %u to %lu",
 				     audio_format.sample_rate,
-				     (unsigned long)frame_info.samplerate);
+				     frame_info.samplerate);
 			break;
 		}
 
@@ -391,7 +391,7 @@ faad_stream_decode(DecoderClient &client, InputStream &is,
 		/* send PCM samples to MPD */
 
 		cmd = client.SubmitData(is, decoded,
-					(size_t)frame_info.samples * 2,
+					size_t(frame_info.samples) * 2,
 					bit_rate);
 	} while (cmd != DecoderCommand::STOP);
 }

@@ -271,7 +271,7 @@ CueParser::Feed(StringView src) noexcept
 		if (position_ms < 0)
 			return;
 
-		if (previous != nullptr && previous->GetStartTime().ToMS() < (unsigned)position_ms)
+		if (previous != nullptr && previous->GetStartTime().ToMS() < unsigned(position_ms))
 			previous->SetEndTime(SongTime::FromMS(position_ms));
 
 		if (current != nullptr)

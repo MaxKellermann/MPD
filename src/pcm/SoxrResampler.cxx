@@ -281,7 +281,7 @@ SoxrPcmResampler::Resample(ConstBuffer<void> src)
 	/* always round up: worst case output buffer size */
 	const size_t o_frames = size_t(n_frames * ratio) + 1;
 
-	auto *output_buffer = (float *)buffer.Get(o_frames * frame_size);
+	auto *output_buffer = static_cast<float *>(buffer.Get(o_frames * frame_size));
 
 	size_t i_done, o_done;
 	soxr_error_t e = soxr_process(soxr, src.data, n_frames, &i_done,
@@ -298,7 +298,7 @@ SoxrPcmResampler::Flush()
 	const size_t frame_size = channels * sizeof(float);
 	const size_t o_frames = 1024;
 
-	auto *output_buffer = (float *)buffer.Get(o_frames * frame_size);
+	auto *output_buffer = static_cast<float *>(buffer.Get(o_frames * frame_size));
 
 	size_t o_done;
 	soxr_error_t e = soxr_process(soxr, nullptr, 0, nullptr,

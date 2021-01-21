@@ -82,7 +82,7 @@ directory_save(BufferedOutputStream &os, const Directory &directory)
 
 		if (!IsNegative(directory.mtime))
 			os.Format(DIRECTORY_MTIME "%lu\n",
-				  (unsigned long)std::chrono::system_clock::to_time_t(directory.mtime));
+				  static_cast<unsigned long>(std::chrono::system_clock::to_time_t(directory.mtime)));
 
 		os.Format("%s%s\n", DIRECTORY_BEGIN, directory.GetPath());
 	}

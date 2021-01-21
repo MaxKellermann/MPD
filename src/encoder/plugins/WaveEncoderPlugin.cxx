@@ -40,7 +40,7 @@ public:
 	void Write(const void *data, size_t length) override;
 
 	size_t Read(void *dest, size_t length) noexcept override {
-		return buffer.Read((uint8_t *)dest, length);
+		return buffer.Read(static_cast<uint8_t *>(dest), length);
 	}
 };
 
@@ -134,7 +134,7 @@ WaveEncoder::WaveEncoder(AudioFormat &audio_format) noexcept
 
 	auto range = buffer.Write();
 	assert(range.size >= sizeof(WaveHeader));
-	auto *header = (WaveHeader *)range.data;
+	auto *header = reinterpret_cast<WaveHeader *>(range.data);
 
 	/* create PCM wave header in initial buffer */
 	fill_wave_header(header,
@@ -199,7 +199,7 @@ WaveEncoder::Write(const void *src, size_t length)
 			memcpy(dst, src, length);
 			break;
 		case 24:
-			length = pcm24_to_wave(dst, (const uint32_t *)src, length);
+			length = pcm24_to_wave(dst, static_cast<const uint32_t *>(src), length);
 			break;
 		}
 	} else {
@@ -208,15 +208,15 @@ WaveEncoder::Write(const void *src, size_t length)
 			memcpy(dst, src, length);
 			break;
 		case 16:
-			length = pcm16_to_wave((uint16_t *)dst,
-					       (const uint16_t *)src, length);
+			length = pcm16_to_wave(reinterpret_cast<uint16_t *>(dst),
+					       static_cast<const uint16_t *>(src), length);
 			break;
 		case 24:
-			length = pcm24_to_wave(dst, (const uint32_t *)src, length);
+			length = pcm24_to_wave(dst, static_cast<const uint32_t *>(src), length);
 			break;
 		case 32:
-			length = pcm32_to_wave((uint32_t *)dst,
-					       (const uint32_t *)src, length);
+			length = pcm32_to_wave(reinterpret_cast<uint32_t *>(dst),
+					       static_cast<const uint32_t *>(src), length);
 			break;
 		}
 	}

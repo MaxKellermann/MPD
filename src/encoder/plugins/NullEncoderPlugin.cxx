@@ -32,11 +32,11 @@ public:
 
 	/* virtual methods from class Encoder */
 	void Write(const void *data, size_t length) override {
-		buffer.Append((const uint8_t *)data, length);
+		buffer.Append(static_cast<const uint8_t *>(data), length);
 	}
 
 	size_t Read(void *dest, size_t length) override {
-		return buffer.Read((uint8_t *)dest, length);
+		return buffer.Read(static_cast<uint8_t *>(dest), length);
 	}
 };
 

@@ -73,7 +73,7 @@ static void XMLCALL
 asx_start_element(void *user_data, const XML_Char *element_name,
 		  const XML_Char **atts)
 {
-	auto *parser = (AsxParser *)user_data;
+	auto *parser = static_cast<AsxParser *>(user_data);
 	parser->value.clear();
 
 	switch (parser->state) {
@@ -108,7 +108,7 @@ asx_start_element(void *user_data, const XML_Char *element_name,
 static void XMLCALL
 asx_end_element(void *user_data, const XML_Char *element_name)
 {
-	auto *parser = (AsxParser *)user_data;
+	auto *parser = static_cast<AsxParser *>(user_data);
 
 	switch (parser->state) {
 	case AsxParser::ROOT:
@@ -140,7 +140,7 @@ asx_end_element(void *user_data, const XML_Char *element_name)
 static void XMLCALL
 asx_char_data(void *user_data, const XML_Char *s, int len)
 {
-	auto *parser = (AsxParser *)user_data;
+	auto *parser = static_cast<AsxParser *>(user_data);
 
 	switch (parser->state) {
 	case AsxParser::ROOT:

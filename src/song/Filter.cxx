@@ -113,7 +113,7 @@ ParseTimeStamp(const char *s)
 		unsigned long long value = strtoull(s, &endptr, 10);
 		if (*endptr == 0 && endptr > s)
 			/* it's an integral UNIX time stamp */
-			return std::chrono::system_clock::from_time_t((time_t)value);
+			return std::chrono::system_clock::from_time_t(time_t(value));
 
 		/* rethrow the ParseISO8601() error */
 		throw;

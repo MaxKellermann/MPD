@@ -166,7 +166,7 @@ LameEncoder::~LameEncoder() noexcept
 void
 LameEncoder::Write(const void *data, size_t length)
 {
-	const auto *src = (const int16_t*)data;
+	const auto *src = static_cast<const int16_t*>(data);
 
 	assert(output_begin == output_end);
 

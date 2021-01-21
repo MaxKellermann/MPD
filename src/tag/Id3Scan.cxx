@@ -88,7 +88,7 @@ import_id3_string(const id3_ucs4_t *ucs4)
 
 	AtScopeExit(utf8) { free(utf8); };
 
-	return (id3_utf8_t *)xstrdup(Strip((char *)utf8));
+	return reinterpret_cast<id3_utf8_t *>(xstrdup(Strip(reinterpret_cast<char *>(utf8))));
 }
 
 /**
@@ -134,7 +134,7 @@ tag_id3_import_text_frame(const struct id3_frame *frame,
 
 		AtScopeExit(utf8) { free(utf8); };
 
-		handler.OnTag(type, (const char *)utf8);
+		handler.OnTag(type, reinterpret_cast<const char *>(utf8));
 	}
 }
 
@@ -184,7 +184,7 @@ tag_id3_import_comment_frame(const struct id3_frame *frame, TagType type,
 
 	AtScopeExit(utf8) { free(utf8); };
 
-	handler.OnTag(type, (const char *)utf8);
+	handler.OnTag(type, reinterpret_cast<const char *>(utf8));
 }
 
 /**
@@ -238,12 +238,12 @@ tag_id3_import_musicbrainz(const struct id3_tag *id3_tag,
 
 		AtScopeExit(value) { free(value); };
 
-		handler.OnPair((const char *)name, (const char *)value);
+		handler.OnPair(reinterpret_cast<const char *>(name), reinterpret_cast<const char *>(value));
 
-		TagType type = tag_id3_parse_txxx_name((const char*)name);
+		TagType type = tag_id3_parse_txxx_name(reinterpret_cast<const char*>(name));
 
 		if (type != TAG_NUM_OF_ITEM_TYPES)
-			handler.OnTag(type, (const char*)value);
+			handler.OnTag(type, reinterpret_cast<const char*>(value));
 	}
 }
 
@@ -265,7 +265,7 @@ tag_id3_import_ufid(const struct id3_tag *id3_tag,
 
 		const id3_latin1_t *name = id3_field_getlatin1(field);
 		if (name == nullptr ||
-		    strcmp((const char *)name, "http://musicbrainz.org") != 0)
+		    strcmp(reinterpret_cast<const char *>(name), "http://musicbrainz.org") != 0)
 			continue;
 
 		field = id3_frame_field(frame, 1);
@@ -279,7 +279,7 @@ tag_id3_import_ufid(const struct id3_tag *id3_tag,
 			continue;
 
 		handler.OnTag(TAG_MUSICBRAINZ_TRACKID,
-			      {(const char *)value, length});
+			      {reinterpret_cast<const char *>(value), length});
 	}
 }
 
@@ -302,8 +302,7 @@ tag_id3_handle_apic(const struct id3_tag *id3_tag,
 		if (mime_type_field == nullptr)
 			continue;
 
-		const char *mime_type = (const char *)
-			id3_field_getlatin1(mime_type_field);
+		const char *mime_type = reinterpret_cast<const char *>(id3_field_getlatin1(mime_type_field));
 		if (mime_type != nullptr &&
 		    StringIsEqual(mime_type, "-->"))
 			/* this is a URL, not image data */

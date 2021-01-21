@@ -77,7 +77,7 @@ AvioStream::Seek(int64_t pos, int whence)
 int
 AvioStream::_Read(void *opaque, uint8_t *buf, int size)
 {
-	AvioStream &stream = *(AvioStream *)opaque;
+	AvioStream &stream = *static_cast<AvioStream *>(opaque);
 
 	return stream.Read(buf, size);
 }
@@ -85,7 +85,7 @@ AvioStream::_Read(void *opaque, uint8_t *buf, int size)
 int64_t
 AvioStream::_Seek(void *opaque, int64_t pos, int whence)
 {
-	AvioStream &stream = *(AvioStream *)opaque;
+	AvioStream &stream = *static_cast<AvioStream *>(opaque);
 
 	return stream.Seek(pos, whence);
 }
@@ -94,7 +94,7 @@ bool
 AvioStream::Open()
 {
 	constexpr size_t BUFFER_SIZE = 8192;
-	auto buffer = (unsigned char *)av_malloc(BUFFER_SIZE);
+	auto buffer = static_cast<unsigned char *>(av_malloc(BUFFER_SIZE));
 	if (buffer == nullptr)
 		return false;
 

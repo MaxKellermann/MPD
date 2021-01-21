@@ -117,7 +117,7 @@ FfmpegInputStream::Read(std::unique_lock<Mutex> &,
 	}
 
 	offset += result;
-	return (size_t)result;
+	return result;
 }
 
 bool

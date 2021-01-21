@@ -66,7 +66,7 @@ UPnPDeviceDirectory::Downloader::OnHeaders(unsigned status,
 void
 UPnPDeviceDirectory::Downloader::OnData(ConstBuffer<void> _data)
 {
-	data.append((const char *)_data.data, _data.size);
+	data.append(static_cast<const char *>(_data.data), _data.size);
 }
 
 void
@@ -220,13 +220,13 @@ UPnPDeviceDirectory::Invoke(Upnp_EventType et, const void *evp) noexcept
 	case UPNP_DISCOVERY_SEARCH_RESULT:
 	case UPNP_DISCOVERY_ADVERTISEMENT_ALIVE:
 		{
-			auto *disco = (const UpnpDiscovery *)evp;
+			auto *disco = static_cast<const UpnpDiscovery *>(evp);
 			return OnAlive(disco);
 		}
 
 	case UPNP_DISCOVERY_ADVERTISEMENT_BYEBYE:
 		{
-			auto *disco = (const UpnpDiscovery *)evp;
+			auto *disco = static_cast<const UpnpDiscovery *>(evp);
 			return OnByeBye(disco);
 		}
 

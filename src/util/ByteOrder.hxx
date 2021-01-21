@@ -251,7 +251,7 @@ constexpr int16_t
 FromLE16S(uint16_t value) noexcept
 {
 	/* assuming two's complement representation */
-	return static_cast<int16_t>(FromLE16(value));
+	return int16_t(FromLE16(value));
 }
 
 #endif

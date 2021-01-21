@@ -231,11 +231,11 @@ NfsFileReader::OnNfsCallback(unsigned status, void *data) noexcept
 		gcc_unreachable();
 
 	case State::OPEN:
-		OpenCallback((struct nfsfh *)data);
+		OpenCallback(static_cast<struct nfsfh *>(data));
 		break;
 
 	case State::STAT:
-		StatCallback((const struct stat *)data);
+		StatCallback(static_cast<const struct stat *>(data));
 		break;
 
 	case State::READ:

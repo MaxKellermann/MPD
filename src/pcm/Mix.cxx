@@ -121,7 +121,7 @@ pcm_add_vol(PcmDither &dither, void *buffer1, const void *buffer2, size_t size,
 		return true;
 
 	case SampleFormat::FLOAT:
-		pcm_add_vol_float((float *)buffer1, (const float *)buffer2,
+		pcm_add_vol_float(static_cast<float *>(buffer1), static_cast<const float *>(buffer2),
 				  size / 4,
 				  pcm_volume_to_float(vol1),
 				  pcm_volume_to_float(vol2));
@@ -202,7 +202,7 @@ pcm_add(void *buffer1, const void *buffer2, size_t size,
 		return true;
 
 	case SampleFormat::FLOAT:
-		pcm_add_float((float *)buffer1, (const float *)buffer2,
+		pcm_add_float(static_cast<float *>(buffer1), static_cast<const float *>(buffer2),
 			      size / 4);
 		return true;
 	}
@@ -222,7 +222,7 @@ pcm_mix(PcmDither &dither, void *buffer1, const void *buffer2, size_t size,
 	if (portion1 < 0)
 		return pcm_add(buffer1, buffer2, size, format);
 
-	s = std::sin((float)M_PI_2 * portion1);
+	s = std::sin(static_cast<float>(M_PI_2) * portion1);
 	s *= s;
 
 	int vol1 = lround(s * PCM_VOLUME_1S);

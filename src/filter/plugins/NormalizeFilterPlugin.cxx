@@ -69,7 +69,7 @@ PreparedNormalizeFilter::Open(AudioFormat &audio_format)
 ConstBuffer<void>
 NormalizeFilter::FilterPCM(ConstBuffer<void> src)
 {
-	auto *dest = (int16_t *)buffer.Get(src.size);
+	auto *dest = static_cast<int16_t *>(buffer.Get(src.size));
 	memcpy(dest, src.data, src.size);
 
 	Compressor_Process_int16(compressor, dest, src.size / 2);

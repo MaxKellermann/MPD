@@ -50,7 +50,7 @@ ParseCommandArgInt(const char *s, int min_value, int max_value)
 		throw FormatProtocolError(ACK_ERROR_ARG,
 					  "Number too large: %s", s);
 
-	return (int)value;
+	return int(value);
 }
 
 int
@@ -84,7 +84,7 @@ ParseCommandArgRange(const char *s)
 					  "Number too large: %s", s);
 
 	RangeArg range;
-	range.start = (unsigned)value;
+	range.start = unsigned(value);
 
 	if (*test == ':') {
 		value = strtol(++test, &test2, 10);
@@ -105,9 +105,9 @@ ParseCommandArgRange(const char *s)
 			throw FormatProtocolError(ACK_ERROR_ARG,
 						  "Number too large: %s", s);
 
-		range.end = (unsigned)value;
+		range.end = unsigned(value);
 	} else {
-		range.end = (unsigned)value + 1;
+		range.end = unsigned(value) + 1;
 	}
 
 	return range;
@@ -126,7 +126,7 @@ ParseCommandArgUnsigned(const char *s, unsigned max_value)
 		throw FormatProtocolError(ACK_ERROR_ARG,
 					  "Number too large: %s", s);
 
-	return (unsigned)value;
+	return unsigned(value);
 }
 
 unsigned

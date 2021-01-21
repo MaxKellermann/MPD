@@ -193,15 +193,15 @@ pcm_stream_decode(DecoderClient &client, InputStream &is)
 
 		if (reverse_endian)
 			/* make sure we deliver samples in host byte order */
-			reverse_bytes_16((uint16_t *)r.data,
-					 (uint16_t *)r.data,
-					 (uint16_t *)(r.data + r.size));
+			reverse_bytes_16(reinterpret_cast<uint16_t *>(r.data),
+					 reinterpret_cast<uint16_t *>(r.data),
+					 reinterpret_cast<uint16_t *>(r.data + r.size));
 		else if (l24) {
 			/* convert big-endian packed 24 bit
 			   (audio/L24) to native-endian 24 bit (in 32
 			   bit integers) */
 			pcm_unpack_24be(unpack_buffer, r.begin(), r.end());
-			r.data = (uint8_t *)&unpack_buffer[0];
+			r.data = reinterpret_cast<uint8_t *>(&unpack_buffer[0]);
 			r.size = (r.size / 3) * 4;
 		}
 

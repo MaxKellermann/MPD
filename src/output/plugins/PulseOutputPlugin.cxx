@@ -292,7 +292,7 @@ static void
 pulse_output_stream_success_cb([[maybe_unused]] pa_stream *s,
 			       [[maybe_unused]] int success, void *userdata)
 {
-	PulseOutput &po = *(PulseOutput *)userdata;
+	PulseOutput &po = *static_cast<PulseOutput *>(userdata);
 
 	po.OnStreamSuccess();
 }
@@ -329,7 +329,7 @@ PulseOutput::OnContextStateChanged(pa_context_state_t new_state)
 static void
 pulse_output_context_state_cb(struct pa_context *context, void *userdata)
 {
-	PulseOutput &po = *(PulseOutput *)userdata;
+	PulseOutput &po = *static_cast<PulseOutput *>(userdata);
 
 	po.OnContextStateChanged(pa_context_get_state(context));
 }
@@ -358,7 +358,7 @@ pulse_output_subscribe_cb([[maybe_unused]] pa_context *context,
 			  pa_subscription_event_type_t t,
 			  uint32_t idx, void *userdata)
 {
-	PulseOutput &po = *(PulseOutput *)userdata;
+	PulseOutput &po = *static_cast<PulseOutput *>(userdata);
 
 	po.OnServerLayoutChanged(t, idx);
 }
@@ -369,7 +369,7 @@ PulseOutput::Connect()
 	assert(context != nullptr);
 
 	if (pa_context_connect(context, server,
-			       (pa_context_flags_t)0, nullptr) < 0)
+			       pa_context_flags_t(0), nullptr) < 0)
 		throw MakePulseError(context,
 				     "pa_context_connect() has failed");
 }
@@ -533,7 +533,7 @@ PulseOutput::OnStreamSuspended([[maybe_unused]] pa_stream *_stream)
 static void
 pulse_output_stream_suspended_cb(pa_stream *stream, void *userdata)
 {
-	PulseOutput &po = *(PulseOutput *)userdata;
+	PulseOutput &po = *static_cast<PulseOutput *>(userdata);
 
 	po.OnStreamSuspended(stream);
 }
@@ -571,7 +571,7 @@ PulseOutput::OnStreamStateChanged(pa_stream *_stream,
 static void
 pulse_output_stream_state_cb(pa_stream *stream, void *userdata)
 {
-	PulseOutput &po = *(PulseOutput *)userdata;
+	PulseOutput &po = *static_cast<PulseOutput *>(userdata);
 
 	return po.OnStreamStateChanged(stream, pa_stream_get_state(stream));
 }
@@ -589,7 +589,7 @@ static void
 pulse_output_stream_write_cb([[maybe_unused]] pa_stream *stream, size_t nbytes,
 			     void *userdata)
 {
-	PulseOutput &po = *(PulseOutput *)userdata;
+	PulseOutput &po = *static_cast<PulseOutput *>(userdata);
 
 	return po.OnStreamWrite(nbytes);
 }

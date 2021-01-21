@@ -33,7 +33,7 @@
 void
 YajlResponseParser::OnData(ConstBuffer<void> data)
 {
-	handle.Parse((const unsigned char *)data.data, data.size);
+	handle.Parse(static_cast<const unsigned char *>(data.data), data.size);
 }
 
 void

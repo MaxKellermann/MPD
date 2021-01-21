@@ -107,7 +107,7 @@ static void
 pulse_mixer_volume_cb([[maybe_unused]] pa_context *context, const pa_sink_input_info *i,
 		      int eol, void *userdata)
 {
-	auto *pm = (PulseMixer *)userdata;
+	auto *pm = static_cast<PulseMixer *>(userdata);
 	pm->VolumeCallback(i, eol);
 }
 
@@ -141,7 +141,7 @@ pulse_mixer_on_connect([[maybe_unused]] PulseMixer &pm,
 	assert(context != nullptr);
 
 	o = pa_context_subscribe(context,
-				 (pa_subscription_mask_t)PA_SUBSCRIPTION_MASK_SINK_INPUT,
+				 pa_subscription_mask_t(PA_SUBSCRIPTION_MASK_SINK_INPUT),
 				 nullptr, nullptr);
 	if (o == nullptr) {
 		LogPulseError(context,
@@ -188,7 +188,7 @@ pulse_mixer_init([[maybe_unused]] EventLoop &event_loop, AudioOutput &ao,
 {
 	auto &po = (PulseOutput &)ao;
 	float scale = parse_volume_scale_factor(block.GetBlockValue("scale_volume"));
-	auto *pm = new PulseMixer(po, listener, (double)scale);
+	auto *pm = new PulseMixer(po, listener, double(scale));
 
 	pulse_output_set_mixer(po, *pm);
 
@@ -216,7 +216,7 @@ PulseMixer::GetVolumeInternal()
 {
 	auto max_pa_volume = pa_volume_t(volume_scale_factor * PA_VOLUME_NORM);
 	return online ?
-		(int)((100 * (pa_cvolume_avg(&volume) + 1)) / max_pa_volume)
+		int((100 * (pa_cvolume_avg(&volume) + 1)) / max_pa_volume)
 		: -1;
 }
 

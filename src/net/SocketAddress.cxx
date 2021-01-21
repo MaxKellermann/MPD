@@ -64,7 +64,7 @@ SocketAddress::GetLocalRaw() const noexcept
 		return nullptr;
 
 	const auto *sun = &CastTo<struct sockaddr_un>();
-	const auto start = (const char *)sun;
+	const auto start = reinterpret_cast<const char *>(sun);
 	const auto path = sun->sun_path;
 	const size_t header_size = path - start;
 	if (size < size_type(header_size))

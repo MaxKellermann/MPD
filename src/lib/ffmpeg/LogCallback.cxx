@@ -52,7 +52,7 @@ FfmpegLogCallback(void *ptr, int level, const char *fmt, std::va_list vl)
 	const AVClass * cls = nullptr;
 
 	if (ptr != nullptr)
-		cls = *(const AVClass *const*)ptr;
+		cls = *static_cast<const AVClass *const*>(ptr);
 
 	if (cls != nullptr) {
 		const auto domain =

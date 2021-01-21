@@ -230,14 +230,14 @@ RouteFilter::FilterPCM(ConstBuffer<void> src)
 	const size_t bytes_per_frame_per_channel = input_format.GetSampleSize();
 
 	// A moving pointer that always refers to channel 0 in the input, at the currently handled frame
-	const auto *base_source = (const uint8_t *)src.data;
+	const auto *base_source = static_cast<const uint8_t *>(src.data);
 
 	// Grow our reusable buffer, if needed, and set the moving pointer
 	const size_t result_size = number_of_frames * output_frame_size;
 	void *const result = output_buffer.Get(result_size);
 
 	// A moving pointer that always refers to the currently filled channel of the currently handled frame, in the output
-	auto *chan_destination = (uint8_t *)result;
+	auto *chan_destination = static_cast<uint8_t *>(result);
 
 	// Perform our copy operations, with N input channels and M output channels
 	for (unsigned int s=0; s<number_of_frames; ++s) {
@@ -245,7 +245,7 @@ RouteFilter::FilterPCM(ConstBuffer<void> src)
 		// Need to perform one copy per output channel
 		for (unsigned c = 0; c < out_audio_format.channels; ++c) {
 			if (sources[c] == -1 ||
-			    (unsigned)sources[c] >= input_format.channels) {
+			    unsigned(sources[c]) >= input_format.channels) {
 				// No source for this destination output,
 				// give it zeroes as input
 				PcmSilence({chan_destination, bytes_per_frame_per_channel},

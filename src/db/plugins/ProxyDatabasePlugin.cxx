@@ -292,7 +292,7 @@ ThrowError(struct mpd_connection *connection)
 		   as our "enum ack" */
 		const auto server_error =
 			mpd_connection_get_server_error(connection);
-		throw ProtocolError((enum ack)server_error,
+		throw ProtocolError(static_cast<enum ack>(server_error),
 				    mpd_connection_get_error_message(connection));
 	} else {
 		throw LibmpdclientError(code,
@@ -589,7 +589,7 @@ ProxyDatabase::OnSocketReady([[maybe_unused]] unsigned flags) noexcept
 		return;
 	}
 
-	auto idle = (unsigned)mpd_recv_idle(connection, false);
+	auto idle = unsigned(mpd_recv_idle(connection, false));
 	if (idle == 0) {
 		try {
 			CheckError(connection);

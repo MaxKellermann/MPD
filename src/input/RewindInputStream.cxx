@@ -98,10 +98,10 @@ RewindInputStream::Read(std::unique_lock<Mutex> &lock,
 
 		size_t nbytes = input->Read(lock, ptr, read_size);
 
-		if (input->GetOffset() > (offset_type)sizeof(buffer))
+		if (input->GetOffset() > offset_type(sizeof(buffer)))
 			/* disable buffering */
 			tail = 0;
-		else if (tail == (size_t)offset) {
+		else if (tail == size_t(offset)) {
 			/* append to buffer */
 
 			memcpy(buffer + tail, ptr, nbytes);
@@ -121,14 +121,14 @@ RewindInputStream::Seek(std::unique_lock<Mutex> &lock, offset_type new_offset)
 {
 	assert(IsReady());
 
-	if (tail > 0 && new_offset <= (offset_type)tail) {
+	if (tail > 0 && new_offset <= offset_type(tail)) {
 		/* buffered seek */
 
 		assert(!ReadingFromBuffer() ||
-		       head == (size_t)offset);
-		assert(tail == (size_t)input->GetOffset());
+		       head == size_t(offset));
+		assert(tail == size_t(input->GetOffset()));
 
-		head = (size_t)new_offset;
+		head = size_t(new_offset);
 		offset = new_offset;
 	} else {
 		/* disable the buffer, because input has left the

@@ -46,10 +46,10 @@
 static char *user_name;
 
 /** the Unix user id which MPD runs as */
-static uid_t user_uid = (uid_t)-1;
+static uid_t user_uid = uid_t(-1);
 
 /** the Unix group id which MPD runs as */
-static gid_t user_gid = (gid_t)-1;
+static gid_t user_gid = gid_t(-1);
 
 /** the absolute path of the pidfile */
 static AllocatedPath pidfile = nullptr;
@@ -96,9 +96,9 @@ daemonize_set_user()
 		return;
 
 	/* set gid */
-	if (user_gid != (gid_t)-1 && user_gid != getgid() &&
+	if (user_gid != gid_t(-1) && user_gid != getgid() &&
 	    setgid(user_gid) == -1) {
-		throw FormatErrno("Failed to set group %d", (int)user_gid);
+		throw FormatErrno("Failed to set group %d", int(user_gid));
 	}
 
 #ifdef HAVE_INITGROUPS
@@ -117,7 +117,7 @@ daemonize_set_user()
 #endif
 
 	/* set uid */
-	if (user_uid != (uid_t)-1 && user_uid != getuid() &&
+	if (user_uid != uid_t(-1) && user_uid != getuid() &&
 	    setuid(user_uid) == -1) {
 		throw FormatErrno("Failed to set user \"%s\"", user_name);
 	}
@@ -175,7 +175,7 @@ daemonize_begin(bool detach)
 
 	int result;
 	ssize_t nbytes = read(fds[0], &result, sizeof(result));
-	if (nbytes == (ssize_t)sizeof(result)) {
+	if (nbytes == ssize_t(sizeof(result))) {
 		/* the child process was successful */
 		pidfile2.Write(pid);
 		std::exit(EXIT_SUCCESS);

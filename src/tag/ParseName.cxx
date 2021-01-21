@@ -34,7 +34,7 @@ tag_name_parse(StringView name) noexcept
 		assert(tag_item_names[i] != nullptr);
 
 		if (name.Equals(tag_item_names[i]))
-			return (TagType)i;
+			return TagType(i);
 	}
 
 	return TAG_NUM_OF_ITEM_TYPES;
@@ -49,7 +49,7 @@ tag_name_parse_i(const char *name) noexcept
 		assert(tag_item_names[i] != nullptr);
 
 		if (StringEqualsCaseASCII(name, tag_item_names[i]))
-			return (TagType)i;
+			return TagType(i);
 	}
 
 	return TAG_NUM_OF_ITEM_TYPES;
@@ -64,7 +64,7 @@ tag_name_parse_i(StringView name) noexcept
 		assert(tag_item_names[i] != nullptr);
 
 		if (name.EqualsIgnoreCase(tag_item_names[i]))
-			return (TagType)i;
+			return TagType(i);
 	}
 
 	return TAG_NUM_OF_ITEM_TYPES;

@@ -287,8 +287,8 @@ initialize_decoder_and_player(Instance &instance,
 
 			if (result < MIN_BUFFER_SIZE) {
 				FormatWarning(config_domain, "buffer size %lu is too small, using %lu bytes instead",
-					      (unsigned long)result,
-					      (unsigned long)MIN_BUFFER_SIZE);
+					      static_cast<unsigned long>(result),
+					      static_cast<unsigned long>(MIN_BUFFER_SIZE));
 				result = MIN_BUFFER_SIZE;
 			}
 
@@ -301,7 +301,7 @@ initialize_decoder_and_player(Instance &instance,
 
 	if (buffered_chunks >= 1 << 15)
 		throw FormatRuntimeError("buffer size \"%lu\" is too big",
-					 (unsigned long)buffer_size);
+					 static_cast<unsigned long>(buffer_size));
 
 	const unsigned max_length =
 		config.GetPositive(ConfigOption::MAX_PLAYLIST_LENGTH,

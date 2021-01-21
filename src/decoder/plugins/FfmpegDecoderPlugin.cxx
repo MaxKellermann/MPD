@@ -226,7 +226,7 @@ FfmpegSendFrame(DecoderClient &client, InputStream *is,
 		}
 
 		output_buffer.data =
-			(const uint8_t *)output_buffer.data + skip_bytes;
+			static_cast<const uint8_t *>(output_buffer.data) + skip_bytes;
 		output_buffer.size -= skip_bytes;
 		skip_bytes = 0;
 	}
@@ -514,7 +514,7 @@ FfmpegDecode(DecoderClient &client, InputStream *input,
 						   codec_context->channels);
 
 	const SignedSongTime total_time =
-		av_stream.duration != (int64_t)AV_NOPTS_VALUE
+		av_stream.duration != int64_t(AV_NOPTS_VALUE)
 		? FromFfmpegTimeChecked(av_stream.duration, av_stream.time_base)
 		: FromFfmpegTimeChecked(format_context.duration, AV_TIME_BASE_Q);
 
@@ -610,10 +610,10 @@ FfmpegScanStream(AVFormatContext &format_context, TagHandler &handler)
 		return false;
 
 	const AVStream &stream = *format_context.streams[audio_stream];
-	if (stream.duration != (int64_t)AV_NOPTS_VALUE)
+	if (stream.duration != int64_t(AV_NOPTS_VALUE))
 		handler.OnDuration(FromFfmpegTime(stream.duration,
 						  stream.time_base));
-	else if (format_context.duration != (int64_t)AV_NOPTS_VALUE)
+	else if (format_context.duration != int64_t(AV_NOPTS_VALUE))
 		handler.OnDuration(FromFfmpegTime(format_context.duration,
 						  AV_TIME_BASE_Q));
 

@@ -38,12 +38,10 @@ Id3ToReplayGainInfo(ReplayGainInfo &rgi, const struct id3_tag *tag) noexcept
 		if (frame->nfields < 3)
 			continue;
 
-		char *const key = (char *)
-		    id3_ucs4_latin1duplicate(id3_field_getstring
-					     (&frame->fields[1]));
-		char *const value = (char *)
-		    id3_ucs4_latin1duplicate(id3_field_getstring
-					     (&frame->fields[2]));
+		char *const key = reinterpret_cast<char *>(id3_ucs4_latin1duplicate(id3_field_getstring
+					     (&frame->fields[1])));
+		char *const value = reinterpret_cast<char *>(id3_ucs4_latin1duplicate(id3_field_getstring
+					     (&frame->fields[2])));
 
 		if (ParseReplayGainTag(rgi, key, value))
 			found = true;

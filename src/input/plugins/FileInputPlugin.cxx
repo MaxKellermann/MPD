@@ -67,7 +67,7 @@ OpenFileInputStream(Path path, Mutex &mutex)
 					 path.c_str());
 
 #ifdef POSIX_FADV_SEQUENTIAL
-	posix_fadvise(reader.GetFD().Get(), (off_t)0, info.GetSize(),
+	posix_fadvise(reader.GetFD().Get(), off_t(0), info.GetSize(),
 		      POSIX_FADV_SEQUENTIAL);
 #endif
 
@@ -82,7 +82,7 @@ FileInputStream::Seek(std::unique_lock<Mutex> &,
 {
 	{
 		const ScopeUnlock unlock(mutex);
-		reader.Seek((off_t)new_offset);
+		reader.Seek(off_t(new_offset));
 	}
 
 	offset = new_offset;

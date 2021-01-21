@@ -124,7 +124,7 @@ private:
 
 	static void OnShutdown(jack_status_t, const char *reason,
 			       void *arg) noexcept {
-		auto &j = *(JackOutput *)arg;
+		auto &j = *static_cast<JackOutput *>(arg);
 		j.Shutdown(reason);
 	}
 
@@ -144,7 +144,7 @@ private:
 
 	void Process(jack_nframes_t nframes);
 	static int Process(jack_nframes_t nframes, void *arg) noexcept {
-		auto &j = *(JackOutput *)arg;
+		auto &j = *static_cast<JackOutput *>(arg);
 		j.Process(nframes);
 		return 0;
 	}
@@ -297,8 +297,7 @@ static void
 WriteSilence(jack_port_t &port, jack_nframes_t nframes)
 {
 	auto *out =
-		(jack_default_audio_sample_t *)
-		jack_port_get_buffer(&port, nframes);
+		static_cast<jack_default_audio_sample_t *>(jack_port_get_buffer(&port, nframes));
 	if (out == nullptr)
 		/* workaround for libjack1 bug: if the server
 		   connection fails, the process callback is invoked
@@ -327,8 +326,7 @@ Copy(jack_port_t &dest, jack_nframes_t nframes,
      jack_ringbuffer_t &src, jack_nframes_t available)
 {
 	auto *out =
-		(jack_default_audio_sample_t *)
-		jack_port_get_buffer(&dest, nframes);
+		static_cast<jack_default_audio_sample_t *>(jack_port_get_buffer(&dest, nframes));
 	if (out == nullptr)
 		/* workaround for libjack1 bug: if the server
 		   connection fails, the process callback is
@@ -337,7 +335,7 @@ Copy(jack_port_t &dest, jack_nframes_t nframes,
 		return;
 
 	/* copy from buffer to port */
-	jack_ringbuffer_read(&src, (char *)out,
+	jack_ringbuffer_read(&src, reinterpret_cast<char *>(out),
 			     available * jack_sample_size);
 
 	/* ringbuffer underrun, fill with silence */
@@ -661,7 +659,7 @@ JackOutput::WriteSamples(const float *src, size_t n_frames)
 			/* send data symmetrically */
 			space = e.len;
 
-		dest[i] = (float *)e.buf;
+		dest[i] = reinterpret_cast<float *>(e.buf);
 	}
 
 	space /= jack_sample_size;
@@ -702,7 +700,7 @@ JackOutput::Play(const void *chunk, size_t size)
 		}
 
 		size_t frames_written =
-			WriteSamples((const float *)chunk, size);
+			WriteSamples(static_cast<const float *>(chunk), size);
 		if (frames_written > 0)
 			return frames_written * frame_size;
 

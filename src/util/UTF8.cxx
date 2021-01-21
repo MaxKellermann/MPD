@@ -265,7 +265,7 @@ Latin1ToUTF8(const char *gcc_restrict src, char *gcc_restrict buffer,
 		/* everything is plain ASCII, we don't need to convert anything */
 		return src;
 
-	if ((size_t)(p - src) >= buffer_size)
+	if (size_t(p - src) >= buffer_size)
 		/* buffer too small */
 		return nullptr;
 
@@ -299,7 +299,7 @@ char *
 UnicodeToUTF8(unsigned ch, char *q) noexcept
 {
   if (gcc_likely(ch < 0x80)) {
-    *q++ = (char)ch;
+    *q++ = char(ch);
   } else if (gcc_likely(ch < 0x800)) {
     *q++ = MakeLeading1(ch >> 6);
     *q++ = MakeContinuation(ch);

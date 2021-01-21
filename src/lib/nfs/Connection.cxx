@@ -149,9 +149,9 @@ NfsConnection::CancellableCallback::Callback(int err, void *data) noexcept
 		connection.callbacks.Remove(*this);
 
 		if (err >= 0)
-			cb.OnNfsCallback((unsigned)err, data);
+			cb.OnNfsCallback(unsigned(err), data);
 		else
-			cb.OnNfsError(std::make_exception_ptr(NfsClientError(-err, (const char *)data)));
+			cb.OnNfsError(std::make_exception_ptr(NfsClientError(-err, static_cast<const char *>(data))));
 	} else {
 		if (open) {
 			/* a nfs_open_async() call was cancelled - to
@@ -160,7 +160,7 @@ NfsConnection::CancellableCallback::Callback(int err, void *data) noexcept
 			assert(close_fh == nullptr);
 
 			if (err >= 0) {
-				auto *fh = (struct nfsfh *)data;
+				auto *fh = static_cast<struct nfsfh *>(data);
 				connection.Close(fh);
 			}
 		} else if (close_fh != nullptr)
@@ -176,7 +176,7 @@ NfsConnection::CancellableCallback::Callback(int err,
 					     void *data,
 					     void *private_data) noexcept
 {
-	CancellableCallback &c = *(CancellableCallback *)private_data;
+	CancellableCallback &c = *static_cast<CancellableCallback *>(private_data);
 	c.Callback(err, data);
 }
 
@@ -567,7 +567,7 @@ void
 NfsConnection::MountCallback(int status, nfs_context *nfs, void *data,
 			     void *private_data) noexcept
 {
-	auto *c = (NfsConnection *)private_data;
+	auto *c = static_cast<NfsConnection *>(private_data);
 
 	c->MountCallback(status, nfs, data);
 }

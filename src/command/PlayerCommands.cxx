@@ -147,9 +147,9 @@ handle_status(Client &client, [[maybe_unused]] Request args, Response &r)
 		 SingleToString(playlist.GetSingle()),
 		 playlist.GetConsume(),
 		 partition.name.c_str(),
-		 (unsigned long)playlist.GetVersion(),
+		 static_cast<unsigned long>(playlist.GetVersion()),
 		 playlist.GetLength(),
-		 (double)pc.GetMixRampDb(),
+		 double(pc.GetMixRampDb()),
 		 state);
 
 	if (pc.GetCrossFade() > FloatDuration::zero())

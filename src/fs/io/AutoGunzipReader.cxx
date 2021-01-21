@@ -36,7 +36,7 @@ IsGzip(const uint8_t data[4]) noexcept
 inline void
 AutoGunzipReader::Detect()
 {
-	const auto *data = (const uint8_t *)peek.Peek(4);
+	const auto *data = static_cast<const uint8_t *>(peek.Peek(4));
 	if (data == nullptr) {
 		next = &peek;
 		return;

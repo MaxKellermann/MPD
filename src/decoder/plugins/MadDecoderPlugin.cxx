@@ -277,12 +277,10 @@ parse_id3_mixramp(struct id3_tag *tag) noexcept
 		if (frame->nfields < 3)
 			continue;
 
-		char *const key = (char *)
-		    id3_ucs4_latin1duplicate(id3_field_getstring
-					     (&frame->fields[1]));
-		char *const value = (char *)
-		    id3_ucs4_latin1duplicate(id3_field_getstring
-					     (&frame->fields[2]));
+		char *const key = reinterpret_cast<char *>(id3_ucs4_latin1duplicate(id3_field_getstring
+					     (&frame->fields[1])));
+		char *const value = reinterpret_cast<char *>(id3_ucs4_latin1duplicate(id3_field_getstring
+					     (&frame->fields[2])));
 
 		ParseMixRampTag(result, key, value);
 
@@ -402,7 +400,7 @@ MadDecoder::DecodeNextFrame(bool skip, Tag *tag) noexcept
 							    stream.this_frame);
 
 			if (tagsize > 0) {
-				ParseId3((size_t)tagsize, tag);
+				ParseId3(size_t(tagsize), tag);
 				return MadDecoderAction::CONT;
 			}
 		}
@@ -411,7 +409,7 @@ MadDecoder::DecodeNextFrame(bool skip, Tag *tag) noexcept
 	}
 
 	enum mad_layer new_layer = frame.header.layer;
-	if (layer == (mad_layer)0) {
+	if (layer == mad_layer(0)) {
 		if (new_layer != MAD_LAYER_II && new_layer != MAD_LAYER_III) {
 			/* Only layer 2 and 3 have been tested to work */
 			return MadDecoderAction::SKIP;
@@ -553,7 +551,7 @@ parse_lame(struct lame *lame, struct mad_bitptr *ptr, int *bitlen) noexcept
 		return false;
 
 	for (unsigned i = 0; i < 9; i++)
-		lame->encoder[i] = (char)mad_bit_read(ptr, 8);
+		lame->encoder[i] = char(mad_bit_read(ptr, 8));
 	lame->encoder[9] = '\0';
 
 	*bitlen -= 72;

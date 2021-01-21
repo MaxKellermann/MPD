@@ -28,7 +28,7 @@
 FullyBufferedSocket::ssize_t
 FullyBufferedSocket::DirectWrite(const void *data, size_t length) noexcept
 {
-	const auto nbytes = GetSocket().Write((const char *)data, length);
+	const auto nbytes = GetSocket().Write(static_cast<const char *>(data), length);
 	if (gcc_unlikely(nbytes < 0)) {
 		const auto code = GetSocketError();
 		if (IsSocketErrorAgain(code))

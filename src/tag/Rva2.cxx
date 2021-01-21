@@ -69,7 +69,7 @@ rva2_float_volume_adjustment(const Rva2Data &data)
 	 * giving +/- 64 dB with a precision of 0.001953125 dB."
 	 */
 
-	return (float)rva2_fixed_volume_adjustment(data) / (float)512;
+	return float(rva2_fixed_volume_adjustment(data)) / float(512);
 }
 
 static inline bool
@@ -81,9 +81,9 @@ rva2_apply_data(ReplayGainInfo &rgi,
 
 	float volume_adjustment = rva2_float_volume_adjustment(data);
 
-	if (strcmp((const char *)id, "album") == 0)  {
+	if (strcmp(reinterpret_cast<const char *>(id), "album") == 0)  {
 		rgi.album.gain = volume_adjustment;
-	} else if (strcmp((const char *)id, "track") == 0) {
+	} else if (strcmp(reinterpret_cast<const char *>(id), "track") == 0) {
 		rgi.track.gain = volume_adjustment;
 	} else {
 		rgi.album.gain = volume_adjustment;
@@ -117,7 +117,7 @@ rva2_apply_frame(ReplayGainInfo &replay_gain_info,
 	 */
 
 	while (length >= 4) {
-		const Rva2Data &d = *(const Rva2Data *)data;
+		const Rva2Data &d = *reinterpret_cast<const Rva2Data *>(data);
 		unsigned int peak_bytes = rva2_peak_bytes(d);
 		if (4 + peak_bytes > length)
 			break;

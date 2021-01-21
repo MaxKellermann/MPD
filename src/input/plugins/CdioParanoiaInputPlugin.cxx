@@ -260,7 +260,7 @@ CdioParanoiaInputStream::Seek(std::unique_lock<Mutex> &,
 {
 	if (new_offset > size)
 		throw FormatRuntimeError("Invalid offset to seek %ld (%ld)",
-					 (long int)new_offset, (long int)size);
+					 long(new_offset), long(size));
 
 	/* simple case */
 	if (new_offset == offset)
@@ -281,7 +281,7 @@ CdioParanoiaInputStream::Read(std::unique_lock<Mutex> &,
 			      void *ptr, size_t length)
 {
 	size_t nbytes = 0;
-	char *wptr = (char *) ptr;
+	char *wptr = static_cast<char *>(ptr);
 
 	while (length > 0) {
 		/* end of track ? */
@@ -311,7 +311,7 @@ CdioParanoiaInputStream::Read(std::unique_lock<Mutex> &,
 			buffer_lsn = lsn_relofs;
 		} else {
 			//use cached sector
-			rbuf = (const int16_t *)buffer;
+			rbuf = reinterpret_cast<const int16_t *>(buffer);
 		}
 
 		//correct offset
@@ -323,7 +323,7 @@ CdioParanoiaInputStream::Read(std::unique_lock<Mutex> &,
 		const size_t len = (length < maxwrite? length : maxwrite);
 
 		//skip diff bytes from this lsn
-		memcpy(wptr, ((const char *)rbuf) + diff, len);
+		memcpy(wptr, (reinterpret_cast<const char *>(rbuf)) + diff, len);
 		//update pointer
 		wptr += len;
 		nbytes += len;

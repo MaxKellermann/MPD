@@ -62,14 +62,14 @@ StaticSocketAddress::SetPort(unsigned port) noexcept
 	switch (GetFamily()) {
 	case AF_INET:
 		{
-			auto &a = *(IPv4Address *)(void *)&address;
+			auto &a = *static_cast<IPv4Address *>((void *)&address);
 			a.SetPort(port);
 			return true;
 		}
 
 	case AF_INET6:
 		{
-			auto &a = *(IPv6Address *)(void *)&address;
+			auto &a = *static_cast<IPv6Address *>((void *)&address);
 			a.SetPort(port);
 			return true;
 		}

@@ -84,8 +84,8 @@ IcuCollate(std::string_view a, std::string_view b) noexcept
 	assert(collator != nullptr);
 
 	UErrorCode code = U_ZERO_ERROR;
-	return (int)ucol_strcollUTF8(collator, a.data(), a.size(),
-				     b.data(), b.size(), &code);
+	return int(ucol_strcollUTF8(collator, a.data(), a.size(),
+				     b.data(), b.size(), &code));
 
 #elif defined(_WIN32)
 	AllocatedString<wchar_t> wa = nullptr, wb = nullptr;

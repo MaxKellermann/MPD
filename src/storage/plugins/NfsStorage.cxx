@@ -285,7 +285,7 @@ protected:
 	}
 
 	void HandleResult([[maybe_unused]] unsigned status, void *data) noexcept override {
-		Copy(info, *(const struct nfs_stat_64 *)data);
+		Copy(info, *static_cast<const struct nfs_stat_64 *>(data));
 	}
 };
 
@@ -352,7 +352,7 @@ protected:
 
 	void HandleResult([[maybe_unused]] unsigned status,
 			  void *data) noexcept override {
-		auto *const dir = (struct nfsdir *)data;
+		auto *const dir = static_cast<struct nfsdir *>(data);
 
 		CollectEntries(dir);
 		connection.CloseDirectory(dir);

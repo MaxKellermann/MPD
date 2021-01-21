@@ -131,7 +131,7 @@ LibsampleratePcmResampler::Resample2(ConstBuffer<float> src)
 	size_t data_out_size = dest_frames * sizeof(float) * channels;
 
 	data.data_in = const_cast<float *>(src.data);
-	data.data_out = (float *)buffer.Get(data_out_size);
+	data.data_out = static_cast<float *>(buffer.Get(data_out_size));
 	data.input_frames = src_frames;
 	data.output_frames = dest_frames;
 

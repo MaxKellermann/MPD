@@ -549,8 +549,8 @@ AlsaOutput::Setup(AudioFormat &audio_format,
 		    snd_pcm_format_description(hw_result.format));
 
 	FormatDebug(alsa_output_domain, "buffer_size=%u period_size=%u",
-		    (unsigned)hw_result.buffer_size,
-		    (unsigned)hw_result.period_size);
+		    unsigned(hw_result.buffer_size),
+		    unsigned(hw_result.period_size));
 
 	AlsaSetupSw(pcm, hw_result.buffer_size - hw_result.period_size,
 		    hw_result.period_size);
@@ -1044,7 +1044,7 @@ AlsaOutput::Play(const void *chunk, size_t size)
 	if (e.empty())
 		return size;
 
-	size_t bytes_written = ring_buffer->push((const uint8_t *)e.data,
+	size_t bytes_written = ring_buffer->push(static_cast<const uint8_t *>(e.data),
 						 e.size);
 	assert(bytes_written == e.size);
 	(void)bytes_written;

@@ -109,21 +109,21 @@ reverse_bytes(uint8_t *gcc_restrict dest,
 
 	switch (frame_size) {
 	case 2:
-		reverse_bytes_16((uint16_t *)dest,
-				 (const uint16_t *)src,
-				 (const uint16_t *)src_end);
+		reverse_bytes_16(reinterpret_cast<uint16_t *>(dest),
+				 reinterpret_cast<const uint16_t *>(src),
+				 reinterpret_cast<const uint16_t *>(src_end));
 		break;
 
 	case 4:
-		reverse_bytes_32((uint32_t *)dest,
-				 (const uint32_t *)src,
-				 (const uint32_t *)src_end);
+		reverse_bytes_32(reinterpret_cast<uint32_t *>(dest),
+				 reinterpret_cast<const uint32_t *>(src),
+				 reinterpret_cast<const uint32_t *>(src_end));
 		break;
 
 	case 8:
-		reverse_bytes_64((uint64_t *)dest,
-				 (const uint64_t *)src,
-				 (const uint64_t *)src_end);
+		reverse_bytes_64(reinterpret_cast<uint64_t *>(dest),
+				 reinterpret_cast<const uint64_t *>(src),
+				 reinterpret_cast<const uint64_t *>(src_end));
 		break;
 
 	default:

@@ -93,7 +93,7 @@ AppendTo(DynamicFifoBuffer<uint8_t> &buffer,
 		memcpy(p.data, data, nbytes);
 		buffer.Append(nbytes);
 
-		data = (const uint8_t *)data + nbytes;
+		data = static_cast<const uint8_t *>(data) + nbytes;
 		length -= nbytes;
 		total += nbytes;
 	} while (length > 0);
@@ -117,7 +117,7 @@ PeakBuffer::Append(const void *data, size_t length)
 
 	size_t nbytes = AppendTo(*normal_buffer, data, length);
 	if (nbytes > 0) {
-		data = (const uint8_t *)data + nbytes;
+		data = static_cast<const uint8_t *>(data) + nbytes;
 		length -= nbytes;
 		if (length == 0)
 			return true;

@@ -186,7 +186,7 @@ TwolameEncoder::~TwolameEncoder() noexcept
 void
 TwolameEncoder::Write(const void *data, size_t length)
 {
-	const auto *src = (const int16_t*)data;
+	const auto *src = static_cast<const int16_t*>(data);
 
 	assert(output_buffer_position == output_buffer_length);
 
@@ -199,7 +199,7 @@ TwolameEncoder::Write(const void *data, size_t length)
 	if (bytes_out < 0)
 		throw std::runtime_error("twolame encoder failed");
 
-	output_buffer_length = (size_t)bytes_out;
+	output_buffer_length = size_t(bytes_out);
 	output_buffer_position = 0;
 }
 
@@ -212,7 +212,7 @@ TwolameEncoder::Read(void *dest, size_t length) noexcept
 		int ret = twolame_encode_flush(options, output_buffer,
 					       sizeof(output_buffer));
 		if (ret > 0) {
-			output_buffer_length = (size_t)ret;
+			output_buffer_length = size_t(ret);
 			output_buffer_position = 0;
 		}
 

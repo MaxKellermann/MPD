@@ -215,7 +215,7 @@ playlist::SeekSongOrder(PlayerControl &pc, unsigned i, SongTime seek_time)
 	stop_on_error = true;
 	error_count = 0;
 
-	if (!playing || (unsigned)current != i) {
+	if (!playing || unsigned(current) != i) {
 		/* seeking is not within the current song - prepare
 		   song change */
 

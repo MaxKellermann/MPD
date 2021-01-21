@@ -62,7 +62,7 @@ CurlRequest::CurlRequest(CurlGlobal &_global,
 	easy.SetNoProgress();
 	easy.SetNoSignal();
 	easy.SetConnectTimeout(10);
-	easy.SetOption(CURLOPT_HTTPAUTH, (long) CURLAUTH_ANY);
+	easy.SetOption(CURLOPT_HTTPAUTH, long(CURLAUTH_ANY));
 }
 
 CurlRequest::~CurlRequest() noexcept
@@ -222,7 +222,7 @@ size_t
 CurlRequest::_HeaderFunction(char *ptr, size_t size, size_t nmemb,
 			     void *stream) noexcept
 {
-	CurlRequest &c = *(CurlRequest *)stream;
+	CurlRequest &c = *static_cast<CurlRequest *>(stream);
 
 	size *= nmemb;
 
@@ -249,7 +249,7 @@ size_t
 CurlRequest::WriteFunction(char *ptr, size_t size, size_t nmemb,
 			   void *stream) noexcept
 {
-	CurlRequest &c = *(CurlRequest *)stream;
+	CurlRequest &c = *static_cast<CurlRequest *>(stream);
 
 	size *= nmemb;
 	if (size == 0)

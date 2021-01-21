@@ -215,7 +215,7 @@ FifoOutput::Play(const void *chunk, size_t size)
 	while (true) {
 		ssize_t bytes = write(output, chunk, size);
 		if (bytes > 0)
-			return (size_t)bytes;
+			return size_t(bytes);
 
 		if (bytes < 0) {
 			switch (errno) {

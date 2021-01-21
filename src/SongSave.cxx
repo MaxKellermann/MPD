@@ -65,7 +65,7 @@ song_save(BufferedOutputStream &os, const Song &song)
 
 	if (!IsNegative(song.mtime))
 		os.Format(SONG_MTIME ": %li\n",
-			  (long)std::chrono::system_clock::to_time_t(song.mtime));
+			  long(std::chrono::system_clock::to_time_t(song.mtime)));
 	os.Format(SONG_END "\n");
 }
 
@@ -80,7 +80,7 @@ song_save(BufferedOutputStream &os, const DetachedSong &song)
 
 	if (!IsNegative(song.GetLastModified()))
 		os.Format(SONG_MTIME ": %li\n",
-			  (long)std::chrono::system_clock::to_time_t(song.GetLastModified()));
+			  long(std::chrono::system_clock::to_time_t(song.GetLastModified())));
 	os.Format(SONG_END "\n");
 }
 

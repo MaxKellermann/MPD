@@ -109,7 +109,7 @@ db_stats_print(Response &r, const Database &db)
 	const auto update_stamp = db.GetUpdateStamp();
 	if (!IsNegative(update_stamp))
 		r.Format("db_update: %lu\n",
-			 (unsigned long)std::chrono::system_clock::to_time_t(update_stamp));
+			 static_cast<unsigned long>(std::chrono::system_clock::to_time_t(update_stamp)));
 }
 
 #endif
@@ -125,7 +125,7 @@ stats_print(Response &r, const Partition &partition)
 
 	r.Format("uptime: %u\n"
 		 "playtime: %lu\n",
-		 (unsigned)std::chrono::duration_cast<std::chrono::seconds>(uptime).count(),
+		 unsigned(std::chrono::duration_cast<std::chrono::seconds>(uptime).count()),
 		 lround(partition.pc.GetTotalPlayTime().count()));
 
 #ifdef ENABLE_DATABASE

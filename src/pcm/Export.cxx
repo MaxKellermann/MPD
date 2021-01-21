@@ -296,7 +296,7 @@ PcmExport::Export(ConstBuffer<void> data) noexcept
 		const auto src = ConstBuffer<int32_t>::FromVoid(data);
 		const size_t num_samples = src.size;
 		const size_t dest_size = num_samples * 3;
-		auto *dest = (uint8_t *)pack_buffer.Get(dest_size);
+		auto *dest = static_cast<uint8_t *>(pack_buffer.Get(dest_size));
 		assert(dest != nullptr);
 
 		pcm_pack_24(dest, src.begin(), src.end());
@@ -306,7 +306,7 @@ PcmExport::Export(ConstBuffer<void> data) noexcept
 	} else if (shift8) {
 		const auto src = ConstBuffer<int32_t>::FromVoid(data);
 
-		auto *dest = (uint32_t *)pack_buffer.Get(data.size);
+		auto *dest = static_cast<uint32_t *>(pack_buffer.Get(data.size));
 		data.data = dest;
 
 		for (auto i : src)
@@ -318,7 +318,7 @@ PcmExport::Export(ConstBuffer<void> data) noexcept
 
 		const auto src = ConstBuffer<uint8_t>::FromVoid(data);
 
-		auto *dest = (uint8_t *)reverse_buffer.Get(data.size);
+		auto *dest = static_cast<uint8_t *>(reverse_buffer.Get(data.size));
 		assert(dest != nullptr);
 		data.data = dest;
 

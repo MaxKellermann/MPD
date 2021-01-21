@@ -23,7 +23,7 @@
 static void
 pack_sample(uint8_t *dest, const int32_t *src0) noexcept
 {
-	const auto *src = (const uint8_t *)src0;
+	const auto *src = reinterpret_cast<const uint8_t *>(src0);
 
 	if (IsBigEndian())
 		++src;

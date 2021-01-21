@@ -144,9 +144,9 @@ playlist::SwapPositions(PlayerControl &pc, unsigned song1, unsigned song2)
 	} else {
 		/* correct the "current" song order */
 
-		if (current == (int)song1)
+		if (current == int(song1))
 			current = song2;
-		else if (current == (int)song2)
+		else if (current == int(song2))
 			current = song1;
 	}
 
@@ -217,14 +217,14 @@ playlist::DeleteInternal(PlayerControl &pc,
 
 	unsigned songOrder = queue.PositionToOrder(song);
 
-	if (playing && current == (int)songOrder) {
+	if (playing && current == int(songOrder)) {
 		const bool paused = pc.GetState() == PlayerState::PAUSE;
 
 		/* the current song is going to be deleted: see which
 		   song is going to be played instead */
 
 		current = queue.GetNextOrder(current);
-		if (current == (int)songOrder)
+		if (current == int(songOrder))
 			current = -1;
 
 		if (current >= 0 && !paused)
@@ -242,7 +242,7 @@ playlist::DeleteInternal(PlayerControl &pc,
 		}
 
 		*queued_p = nullptr;
-	} else if (current == (int)songOrder)
+	} else if (current == int(songOrder))
 		/* there's a "current song" but we're not playing
 		   currently - clear "current" */
 		current = -1;
@@ -253,7 +253,7 @@ playlist::DeleteInternal(PlayerControl &pc,
 
 	/* update the "current" and "queued" variables */
 
-	if (current > (int)songOrder)
+	if (current > int(songOrder))
 		current--;
 }
 
@@ -330,7 +330,7 @@ playlist::MoveRange(PlayerControl &pc,
 	    (to < 0 && unsigned(std::abs(to)) > GetLength()))
 		throw PlaylistError::BadRange();
 
-	if ((int)start == to)
+	if (int(start) == to)
 		/* nothing happens */
 		return;
 
@@ -347,11 +347,11 @@ playlist::MoveRange(PlayerControl &pc,
 			   because there is no current song */
 			throw PlaylistError::BadRange();
 
-		if (start <= (unsigned)currentSong && (unsigned)currentSong < end)
+		if (start <= unsigned(currentSong) && unsigned(currentSong) < end)
 			/* no-op, can't be moved to offset of itself */
 			return;
 		to = (currentSong + std::abs(to)) % GetLength();
-		if (start < (unsigned)to)
+		if (start < unsigned(to))
 			to -= end - start;
 	}
 
@@ -359,11 +359,11 @@ playlist::MoveRange(PlayerControl &pc,
 
 	if (!queue.random) {
 		/* update current/queued */
-		if ((int)start <= current && (unsigned)current < end)
+		if (int(start) <= current && unsigned(current) < end)
 			current += to - start;
-		else if (current >= (int)end && current <= to)
+		else if (current >= int(end) && current <= to)
 			current -= end - start;
-		else if (current >= to && current < (int)start)
+		else if (current >= to && current < int(start))
 			current += end - start;
 	}
 

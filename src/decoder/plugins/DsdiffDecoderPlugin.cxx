@@ -108,7 +108,7 @@ dsdiff_read_payload(DecoderClient *client, InputStream &is,
 		    void *data, size_t length)
 {
 	uint64_t size = header->GetSize();
-	if (size != (uint64_t)length)
+	if (size != uint64_t(length))
 		return false;
 
 	return decoder_read_full(client, is, data, length);
@@ -220,7 +220,7 @@ dsdiff_handle_native_tag(DecoderClient *client, InputStream &is,
 	char *label;
 	label = string;
 
-	if (!decoder_read_full(client, is, label, (size_t)length))
+	if (!decoder_read_full(client, is, label, size_t(length)))
 		return;
 
 	handler.OnTag(type, {label, length});
@@ -404,7 +404,7 @@ dsdiff_decode_chunk(DecoderClient &client, InputStream &is,
 		/* see how much aligned data from the remaining chunk
 		   fits into the local buffer */
 		size_t now_size = buffer_size;
-		if (remaining_bytes < (offset_type)now_size) {
+		if (remaining_bytes < offset_type(now_size)) {
 			unsigned now_frames = remaining_bytes / frame_size;
 			now_size = now_frames * frame_size;
 		}

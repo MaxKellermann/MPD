@@ -126,7 +126,7 @@ template<typename T>
 static void
 format_samples_int(void *buffer, uint32_t count)
 {
-	auto *src = (int32_t *)buffer;
+	auto *src = static_cast<int32_t *>(buffer);
 	T *dst = (T *)buffer;
 	/*
 	 * The asserts like the following one are because we do the
@@ -354,7 +354,7 @@ static WavpackInput *
 wpin(void *id)
 {
 	assert(id);
-	return (WavpackInput *)id;
+	return static_cast<WavpackInput *>(id);
 }
 
 static int32_t
@@ -366,7 +366,7 @@ wavpack_input_read_bytes(void *id, void *data, int32_t bcount)
 int32_t
 WavpackInput::ReadBytes(void *data, size_t bcount)
 {
-	auto *buf = (uint8_t *)data;
+	auto *buf = static_cast<uint8_t *>(data);
 	int32_t i = 0;
 
 	if (last_byte != EOF) {

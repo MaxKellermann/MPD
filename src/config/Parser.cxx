@@ -57,7 +57,7 @@ ParseUnsigned(const char *s)
 	if (value < 0)
 		throw std::runtime_error("Value must not be negative");
 
-	return (unsigned)value;
+	return unsigned(value);
 }
 
 unsigned
@@ -67,7 +67,7 @@ ParsePositive(const char *s)
 	if (value <= 0)
 		throw std::runtime_error("Value must be positive");
 
-	return (unsigned)value;
+	return unsigned(value);
 }
 
 template<std::size_t OPERAND>

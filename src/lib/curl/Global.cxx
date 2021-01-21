@@ -118,8 +118,8 @@ CurlSocket::SocketFunction([[maybe_unused]] CURL *easy,
 			   curl_socket_t s, int action,
 			   void *userp, void *socketp) noexcept
 {
-	auto &global = *(CurlGlobal *)userp;
-	auto *cs = (CurlSocket *)socketp;
+	auto &global = *static_cast<CurlGlobal *>(userp);
+	auto *cs = static_cast<CurlSocket *>(socketp);
 
 	assert(global.GetEventLoop().IsInside());
 
@@ -178,7 +178,7 @@ ToRequest(CURL *easy) noexcept
 	if (code != CURLE_OK)
 		return nullptr;
 
-	return (CurlRequest *)p;
+	return static_cast<CurlRequest *>(p);
 }
 
 inline void
@@ -230,7 +230,7 @@ int
 CurlGlobal::TimerFunction([[maybe_unused]] CURLM *_multi, long timeout_ms,
 			  void *userp) noexcept
 {
-	auto &global = *(CurlGlobal *)userp;
+	auto &global = *static_cast<CurlGlobal *>(userp);
 	assert(_multi == global.multi.Get());
 
 	global.UpdateTimeout(timeout_ms);

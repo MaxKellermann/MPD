@@ -132,7 +132,7 @@ QobuzTagScanner::ResponseParser::Integer(long long value) noexcept
 	switch (state) {
 	case State::DURATION:
 		if (value > 0)
-			tag.SetDuration(SignedSongTime::FromS((unsigned)value));
+			tag.SetDuration(SignedSongTime::FromS(unsigned(value)));
 		break;
 
 	default:

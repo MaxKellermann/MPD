@@ -871,7 +871,7 @@ Player::PlayNextChunk() noexcept
 						    std::move(other_chunk->tag));
 
 			if (pc.cross_fade.mixramp_delay <= FloatDuration::zero()) {
-				chunk->mix_ratio = ((float)cross_fade_position)
+				chunk->mix_ratio = (float(cross_fade_position))
 					     / cross_fade_chunks;
 			} else {
 				chunk->mix_ratio = -1;

@@ -214,12 +214,12 @@ OpusEncoder::DoEncode(bool eos)
 	opus_int32 result =
 		audio_format.format == SampleFormat::S16
 		? opus_encode(enc,
-		              (const opus_int16 *)buffer,
+		              reinterpret_cast<const opus_int16 *>(buffer),
 		              buffer_frames,
 		              buffer2,
 		              sizeof(buffer2))
 		: opus_encode_float(enc,
-		                    (const float *)buffer,
+		                    reinterpret_cast<const float *>(buffer),
 		                    buffer_frames,
 		                    buffer2,
 		                    sizeof(buffer2));
@@ -271,7 +271,7 @@ OpusEncoder::WriteSilence(unsigned fill_frames)
 void
 OpusEncoder::Write(const void *_data, size_t length)
 {
-	const auto *data = (const uint8_t *)_data;
+	const auto *data = static_cast<const uint8_t *>(_data);
 
 	if (lookahead > 0) {
 		/* generate some silence at the beginning of the
@@ -312,8 +312,8 @@ OpusEncoder::GenerateHead() noexcept
 	memcpy(header, "OpusHead", 8);
 	header[8] = 1;
 	header[9] = audio_format.channels;
-	*(uint16_t *)(header + 10) = ToLE16(lookahead);
-	*(uint32_t *)(header + 12) = ToLE32(audio_format.sample_rate);
+	*reinterpret_cast<uint16_t *>(header + 10) = ToLE16(lookahead);
+	*reinterpret_cast<uint32_t *>(header + 12) = ToLE32(audio_format.sample_rate);
 	header[16] = 0;
 	header[17] = 0;
 	header[18] = 0;
@@ -350,7 +350,7 @@ OpusEncoder::GenerateTags(const Tag *tag) noexcept
 	unsigned char *p = comments;
 
 	memcpy(comments, "OpusTags", 8);
-	*(uint32_t *)(comments + 8) = ToLE32(version_length);
+	*reinterpret_cast<uint32_t *>(comments + 8) = ToLE32(version_length);
 	p += 12;
 
 	memcpy(p, version, version_length);
@@ -369,7 +369,7 @@ OpusEncoder::GenerateTags(const Tag *tag) noexcept
 			memcpy(p, &tag_len_le, 4);
 			p += 4;
 
-			ToUpperASCII((char *)p, tag_item_names[item.type], tag_name_len + 1);
+			ToUpperASCII(reinterpret_cast<char *>(p), tag_item_names[item.type], tag_name_len + 1);
 			p += tag_name_len;
 
 			*p++ = '=';

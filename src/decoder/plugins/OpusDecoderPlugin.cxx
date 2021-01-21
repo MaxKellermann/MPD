@@ -325,7 +325,7 @@ MPDOpusDecoder::HandleAudio(const ogg_packet &packet)
 	}
 
 	/* apply the "skip" value */
-	if (skip >= (unsigned)nframes) {
+	if (skip >= unsigned(nframes)) {
 		skip -= nframes;
 		AddGranulepos(nframes);
 		return;

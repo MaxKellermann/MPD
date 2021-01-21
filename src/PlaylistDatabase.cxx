@@ -36,7 +36,7 @@ playlist_vector_save(BufferedOutputStream &os, const PlaylistVector &pv)
 		os.Format(PLAYLIST_META_BEGIN "%s\n", pi.name.c_str());
 		if (!IsNegative(pi.mtime))
 			os.Format("mtime: %li\n",
-				  (long)std::chrono::system_clock::to_time_t(pi.mtime));
+				  long(std::chrono::system_clock::to_time_t(pi.mtime)));
 		os.Write("playlist_end\n");
 	}
 }

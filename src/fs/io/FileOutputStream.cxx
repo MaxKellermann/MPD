@@ -245,7 +245,7 @@ FileOutputStream::Write(const void *data, size_t size)
 	ssize_t nbytes = fd.Write(data, size);
 	if (nbytes < 0)
 		throw FormatErrno("Failed to write to %s", GetPath().c_str());
-	else if ((size_t)nbytes < size)
+	else if (size_t(nbytes) < size)
 		throw FormatErrno(ENOSPC, "Failed to write to %s",
 				  GetPath().c_str());
 }

@@ -35,7 +35,7 @@
 static StringView
 ToStringView(const FLAC__StreamMetadata_VorbisComment_Entry &entry) noexcept
 {
-	return {(const char *)entry.entry, entry.length};
+	return {reinterpret_cast<const char *>(entry.entry), entry.length};
 }
 
 bool

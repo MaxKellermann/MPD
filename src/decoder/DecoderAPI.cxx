@@ -46,7 +46,7 @@ size_t
 decoder_read_much(DecoderClient *client, InputStream &is,
 		  void *_buffer, size_t size) noexcept
 {
-	auto buffer = (uint8_t *)_buffer;
+	auto buffer = static_cast<uint8_t *>(_buffer);
 
 	size_t total = 0;
 
@@ -67,7 +67,7 @@ bool
 decoder_read_full(DecoderClient *client, InputStream &is,
 		  void *_buffer, size_t size) noexcept
 {
-	auto buffer = (uint8_t *)_buffer;
+	auto buffer = static_cast<uint8_t *>(_buffer);
 
 	while (size > 0) {
 		size_t nbytes = decoder_read(client, is, buffer, size);

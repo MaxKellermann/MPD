@@ -55,7 +55,7 @@ SocketDescriptor::GetType() const noexcept
 	int type;
 	socklen_t size = sizeof(type);
 	return getsockopt(fd, SOL_SOCKET, SO_TYPE,
-			  (char *)&type, &size) == 0
+			  reinterpret_cast<char *>(&type), &size) == 0
 		? type
 		: -1;
 }
@@ -220,7 +220,7 @@ SocketDescriptor::GetError() noexcept
 	int s_err = 0;
 	socklen_t s_err_size = sizeof(s_err);
 	return getsockopt(fd, SOL_SOCKET, SO_ERROR,
-			  (char *)&s_err, &s_err_size) == 0
+			  reinterpret_cast<char *>(&s_err), &s_err_size) == 0
 		? s_err
 		: errno;
 }
@@ -232,7 +232,7 @@ SocketDescriptor::GetOption(int level, int name,
 	assert(IsDefined());
 
 	socklen_t size2 = size;
-	return getsockopt(fd, level, name, (char *)value, &size2) == 0
+	return getsockopt(fd, level, name, static_cast<char *>(value), &size2) == 0
 		? size2
 		: 0;
 }
@@ -269,7 +269,7 @@ SocketDescriptor::SetOption(int level, int name,
 	assert(IsDefined());
 
 	/* on Windows, setsockopt() wants "const char *" */
-	return setsockopt(fd, level, name, (const char *)value, size) == 0;
+	return setsockopt(fd, level, name, static_cast<const char *>(value), size) == 0;
 }
 
 bool
@@ -392,7 +392,7 @@ bool
 SocketDescriptor::AutoBind() noexcept
 {
 	static constexpr sa_family_t family = AF_LOCAL;
-	return Bind(SocketAddress((const struct sockaddr *)&family,
+	return Bind(SocketAddress(reinterpret_cast<const struct sockaddr *>(&family),
 				  sizeof(family)));
 }
 
@@ -438,7 +438,7 @@ SocketDescriptor::Read(void *buffer, size_t length) noexcept
 	flags |= MSG_DONTWAIT;
 #endif
 
-	return ::recv(Get(), (char *)buffer, length, flags);
+	return ::recv(Get(), static_cast<char *>(buffer), length, flags);
 }
 
 ssize_t
@@ -449,7 +449,7 @@ SocketDescriptor::Write(const void *buffer, size_t length) noexcept
 	flags |= MSG_NOSIGNAL;
 #endif
 
-	return ::send(Get(), (const char *)buffer, length, flags);
+	return ::send(Get(), static_cast<const char *>(buffer), length, flags);
 }
 
 #ifdef _WIN32
@@ -504,7 +504,7 @@ SocketDescriptor::Read(void *buffer, size_t length,
 #endif
 
 	socklen_t addrlen = address.GetCapacity();
-	ssize_t nbytes = ::recvfrom(Get(), (char *)buffer, length, flags,
+	ssize_t nbytes = ::recvfrom(Get(), static_cast<char *>(buffer), length, flags,
 				    address, &addrlen);
 	if (nbytes > 0)
 		address.SetSize(addrlen);
@@ -524,7 +524,7 @@ SocketDescriptor::Write(const void *buffer, size_t length,
 	flags |= MSG_NOSIGNAL;
 #endif
 
-	return ::sendto(Get(), (const char *)buffer, length, flags,
+	return ::sendto(Get(), static_cast<const char *>(buffer), length, flags,
 			address.GetAddress(), address.GetSize());
 }
 

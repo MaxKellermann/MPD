@@ -64,7 +64,7 @@ GunzipReader::Read(void *data, size_t size)
 	if (eof)
 		return 0;
 
-	z.next_out = (Bytef *)data;
+	z.next_out = static_cast<Bytef *>(data);
 	z.avail_out = size;
 
 	while (true) {

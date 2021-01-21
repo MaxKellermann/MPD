@@ -85,14 +85,14 @@ MmsInputStream::ThreadRead(void *ptr, size_t read_size)
 	if (read_size > MAX_CHUNK)
 		read_size = MAX_CHUNK;
 
-	int nbytes = mmsx_read(nullptr, mms, (char *)ptr, read_size);
+	int nbytes = mmsx_read(nullptr, mms, static_cast<char *>(ptr), read_size);
 	if (nbytes <= 0) {
 		if (nbytes < 0)
 			throw MakeErrno("mmsx_read() failed");
 		return 0;
 	}
 
-	return (size_t)nbytes;
+	return size_t(nbytes);
 }
 
 static constexpr const char *mms_prefixes[] = {

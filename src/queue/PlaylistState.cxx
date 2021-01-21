@@ -88,12 +88,12 @@ playlist_state_save(BufferedOutputStream &os, const struct playlist &playlist,
 	os.Format(PLAYLIST_STATE_FILE_RANDOM "%i\n", playlist.queue.random);
 	os.Format(PLAYLIST_STATE_FILE_REPEAT "%i\n", playlist.queue.repeat);
 	os.Format(PLAYLIST_STATE_FILE_SINGLE "%i\n",
-			  (int)playlist.queue.single);
+			  int(playlist.queue.single));
 	os.Format(PLAYLIST_STATE_FILE_CONSUME "%i\n", playlist.queue.consume);
 	os.Format(PLAYLIST_STATE_FILE_CROSSFADE "%i\n",
-		  (int)pc.GetCrossFade().count());
+		  int(pc.GetCrossFade().count()));
 	os.Format(PLAYLIST_STATE_FILE_MIXRAMPDB "%f\n",
-		  (double)pc.GetMixRampDb());
+		  double(pc.GetMixRampDb()));
 	os.Format(PLAYLIST_STATE_FILE_MIXRAMPDELAY "%f\n",
 		  pc.GetMixRampDelay().count());
 	os.Write(PLAYLIST_STATE_FILE_PLAYLIST_BEGIN "\n");
@@ -232,10 +232,10 @@ playlist_state_get_hash(const playlist &playlist,
 		(playlist.current >= 0
 		 ? (playlist.queue.OrderToPosition(playlist.current) << 16)
 		 : 0) ^
-		((int)pc.GetCrossFade().count() << 20) ^
+		(int(pc.GetCrossFade().count()) << 20) ^
 		(unsigned(player_status.state) << 24) ^
 		/* note that this takes 2 bits */
-		((int)playlist.queue.single << 25) ^
+		(int(playlist.queue.single) << 25) ^
 		(playlist.queue.random << 27) ^
 		(playlist.queue.repeat << 28) ^
 		(playlist.queue.consume << 30) ^

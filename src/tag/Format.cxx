@@ -49,7 +49,7 @@ IsUnsafeChar(char ch)
 		ch == '\\' || ch == '/' || ch == ':' || ch == '*' ||
 		ch == '?' || ch == '<' || ch == '>' || ch == '|' ||
 		/* allow space, but disallow all other whitespace */
-		(unsigned char)ch < 0x20;
+		uint8_t(ch) < 0x20;
 }
 
 gcc_pure
@@ -82,7 +82,7 @@ gcc_pure gcc_nonnull_all
 static const char *
 TagGetter(const void *object, const char *name) noexcept
 {
-	const auto &_ctx = *(const FormatTagContext *)object;
+	const auto &_ctx = *static_cast<const FormatTagContext *>(object);
 	auto &ctx = const_cast<FormatTagContext &>(_ctx);
 
 	if (strcmp(name, "iso8601") == 0) {

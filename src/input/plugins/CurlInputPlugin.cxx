@@ -418,7 +418,7 @@ CurlInputStream::InitEasy()
 		request->SetOption(CURLOPT_PROXY, proxy);
 
 	if (proxy_port > 0)
-		request->SetOption(CURLOPT_PROXYPORT, (long)proxy_port);
+		request->SetOption(CURLOPT_PROXYPORT, long(proxy_port));
 
 	if (proxy_user != nullptr && proxy_password != nullptr)
 		request->SetOption(CURLOPT_PROXYUSERPWD,

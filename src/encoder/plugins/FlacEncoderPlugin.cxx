@@ -62,7 +62,7 @@ public:
 	void Write(const void *data, size_t length) override;
 
 	size_t Read(void *dest, size_t length) noexcept override {
-		return output_buffer.Read((uint8_t *)dest, length);
+		return output_buffer.Read(static_cast<uint8_t *>(dest), length);
 	}
 
 private:
@@ -72,8 +72,8 @@ private:
 							    [[maybe_unused]] unsigned samples,
 							    [[maybe_unused]] unsigned current_frame,
 							    void *client_data) noexcept {
-		auto &encoder = *(FlacEncoder *)client_data;
-		encoder.output_buffer.Append((const uint8_t *)data, bytes);
+		auto &encoder = *static_cast<FlacEncoder *>(client_data);
+		encoder.output_buffer.Append(static_cast<const uint8_t *>(data), bytes);
 		return FLAC__STREAM_ENCODER_WRITE_STATUS_OK;
 	}
 };
@@ -215,14 +215,14 @@ FlacEncoder::Write(const void *data, size_t length)
 	switch (audio_format.format) {
 	case SampleFormat::S8:
 		exbuffer = expand_buffer.Get(length * 4);
-		pcm8_to_flac((int32_t *)exbuffer, (const int8_t *)data,
+		pcm8_to_flac(static_cast<int32_t *>(exbuffer), static_cast<const int8_t *>(data),
 			     num_samples);
 		buffer = exbuffer;
 		break;
 
 	case SampleFormat::S16:
 		exbuffer = expand_buffer.Get(length * 2);
-		pcm16_to_flac((int32_t *)exbuffer, (const int16_t *)data,
+		pcm16_to_flac(static_cast<int32_t *>(exbuffer), static_cast<const int16_t *>(data),
 			      num_samples);
 		buffer = exbuffer;
 		break;
@@ -241,7 +241,7 @@ FlacEncoder::Write(const void *data, size_t length)
 	/* feed samples to encoder */
 
 	if (!FLAC__stream_encoder_process_interleaved(fse,
-						      (const FLAC__int32 *)buffer,
+						      static_cast<const FLAC__int32 *>(buffer),
 						      num_frames))
 		throw std::runtime_error("flac encoder process failed");
 }

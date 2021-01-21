@@ -223,42 +223,42 @@ PcmVolume::Apply(ConstBuffer<void> src) noexcept
 		gcc_unreachable();
 
 	case SampleFormat::S8:
-		pcm_volume_change_8(dither, (int8_t *)data,
-				    (const int8_t *)src.data,
+		pcm_volume_change_8(dither, static_cast<int8_t *>(data),
+				    static_cast<const int8_t *>(src.data),
 				    src.size / sizeof(int8_t),
 				    volume);
 		break;
 
 	case SampleFormat::S16:
 		if (convert)
-			PcmVolumeChange16to32((int32_t *)data,
-					      (const int16_t *)src.data,
+			PcmVolumeChange16to32(static_cast<int32_t *>(data),
+					      static_cast<const int16_t *>(src.data),
 					      src.size / sizeof(int16_t),
 					      volume);
 		else
-			pcm_volume_change_16(dither, (int16_t *)data,
-					     (const int16_t *)src.data,
+			pcm_volume_change_16(dither, static_cast<int16_t *>(data),
+					     static_cast<const int16_t *>(src.data),
 					     src.size / sizeof(int16_t),
 					     volume);
 		break;
 
 	case SampleFormat::S24_P32:
-		pcm_volume_change_24(dither, (int32_t *)data,
-				     (const int32_t *)src.data,
+		pcm_volume_change_24(dither, static_cast<int32_t *>(data),
+				     static_cast<const int32_t *>(src.data),
 				     src.size / sizeof(int32_t),
 				     volume);
 		break;
 
 	case SampleFormat::S32:
-		pcm_volume_change_32(dither, (int32_t *)data,
-				     (const int32_t *)src.data,
+		pcm_volume_change_32(dither, static_cast<int32_t *>(data),
+				     static_cast<const int32_t *>(src.data),
 				     src.size / sizeof(int32_t),
 				     volume);
 		break;
 
 	case SampleFormat::FLOAT:
-		pcm_volume_change_float((float *)data,
-					(const float *)src.data,
+		pcm_volume_change_float(static_cast<float *>(data),
+					static_cast<const float *>(src.data),
 					src.size / sizeof(float),
 					pcm_volume_to_float(volume));
 		break;

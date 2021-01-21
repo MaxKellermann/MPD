@@ -55,7 +55,7 @@ MD5(ConstBuffer<void> input) noexcept
 {
 #ifdef HAVE_LIBAVUTIL
 	std::array<uint8_t, 16> result;
-	av_md5_sum(&result.front(), (const uint8_t *)input.data, input.size);
+	av_md5_sum(&result.front(), static_cast<const uint8_t *>(input.data), input.size);
 	return result;
 #else
 	return Gcrypt::MD5(input);

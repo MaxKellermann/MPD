@@ -137,7 +137,7 @@ StickerDatabase::LoadValue(const char *type, const char *uri, const char *name)
 
 	std::string value;
 	if (ExecuteRow(s))
-		value = (const char*)sqlite3_column_text(s, 0);
+		value = reinterpret_cast<const char*>(sqlite3_column_text(s, 0));
 
 	return value;
 }
@@ -159,8 +159,8 @@ StickerDatabase::ListValues(std::map<std::string, std::string> &table,
 	};
 
 	ExecuteForEach(s, [s, &table](){
-		const char *name = (const char *)sqlite3_column_text(s, 0);
-		const char *value = (const char *)sqlite3_column_text(s, 1);
+		const char *name = reinterpret_cast<const char *>(sqlite3_column_text(s, 0));
+		const char *value = reinterpret_cast<const char *>(sqlite3_column_text(s, 1));
 		table.insert(std::make_pair(name, value));
 	});
 }
@@ -337,8 +337,8 @@ StickerDatabase::Find(const char *type, const char *base_uri, const char *name,
 	};
 
 	ExecuteForEach(s, [s, func, user_data](){
-			func((const char*)sqlite3_column_text(s, 0),
-			     (const char*)sqlite3_column_text(s, 1),
+			func(reinterpret_cast<const char*>(sqlite3_column_text(s, 0)),
+			     reinterpret_cast<const char*>(sqlite3_column_text(s, 1)),
 			     user_data);
 		});
 }

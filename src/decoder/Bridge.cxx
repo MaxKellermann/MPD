@@ -558,7 +558,7 @@ DecoderBridge::SubmitData(InputStream *is,
 			FlushChunk();
 		}
 
-		data = (const uint8_t *)data + nbytes;
+		data = static_cast<const uint8_t *>(data) + nbytes;
 		length -= nbytes;
 
 		timestamp += dc.out_audio_format.SizeToTime<FloatDuration>(nbytes);

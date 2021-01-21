@@ -57,7 +57,7 @@ IPv6Address::UnmapV4() const noexcept
 
 	struct sockaddr_in buffer{};
 	buffer.sin_family = AF_INET;
-	memcpy(&buffer.sin_addr, ((const char *)&address.sin6_addr) + 12,
+	memcpy(&buffer.sin_addr, (reinterpret_cast<const char *>(&address.sin6_addr)) + 12,
 	       sizeof(buffer.sin_addr));
 	buffer.sin_port = address.sin6_port;
 

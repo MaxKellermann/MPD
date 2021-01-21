@@ -43,7 +43,7 @@ FilterHelper::HandleMessage(DBusConnection *dbus_connection,
 			    DBusMessage *message,
 			    void *user_data) noexcept
 {
-	auto &fh = *(FilterHelper *)user_data;
+	auto &fh = *static_cast<FilterHelper *>(user_data);
 	return fh.HandleMessage(dbus_connection, message);
 }
 

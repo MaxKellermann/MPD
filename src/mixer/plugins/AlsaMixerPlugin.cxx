@@ -141,8 +141,7 @@ AlsaMixerMonitor::DispatchSockets() noexcept
 static int
 alsa_mixer_elem_callback(snd_mixer_elem_t *elem, unsigned mask)
 {
-	AlsaMixer &mixer = *(AlsaMixer *)
-		snd_mixer_elem_get_callback_private(elem);
+	AlsaMixer &mixer = *static_cast<AlsaMixer *>(snd_mixer_elem_get_callback_private(elem));
 
 	if (mask & SND_CTL_EVENT_MASK_VALUE) {
 		try {

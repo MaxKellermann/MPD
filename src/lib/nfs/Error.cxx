@@ -61,8 +61,8 @@ FormatNfsClientError(int err, struct nfs_context *nfs, void *data,
 	assert(msg != nullptr);
 	assert(err < 0);
 
-	const char *msg2 = (const char *)data;
-	if (data == nullptr || *(const char *)data == 0) {
+	const char *msg2 = static_cast<const char *>(data);
+	if (data == nullptr || *static_cast<const char *>(data) == 0) {
 		msg2 = nfs_get_error(nfs);
 		if (msg2 == nullptr)
 			msg2 = strerror(-err);

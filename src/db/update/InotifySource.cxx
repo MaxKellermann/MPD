@@ -49,7 +49,7 @@ InotifySource::OnSocketReady([[maybe_unused]] unsigned flags) noexcept
 	while (true) {
 		const size_t remaining = end - p;
 		const auto *event =
-			(const struct inotify_event *)p;
+			reinterpret_cast<const struct inotify_event *>(p);
 		if (remaining < sizeof(*event) ||
 		    remaining < sizeof(*event) + event->len)
 			break;

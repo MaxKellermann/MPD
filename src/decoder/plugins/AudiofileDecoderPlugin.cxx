@@ -75,7 +75,7 @@ audiofile_get_duration(AFfilehandle fh) noexcept
 static ssize_t
 audiofile_file_read(AFvirtualfile *vfile, void *data, size_t length) noexcept
 {
-	AudioFileInputStream &afis = *(AudioFileInputStream *)vfile->closure;
+	AudioFileInputStream &afis = *static_cast<AudioFileInputStream *>(vfile->closure);
 
 	return afis.Read(data, length);
 }
@@ -83,7 +83,7 @@ audiofile_file_read(AFvirtualfile *vfile, void *data, size_t length) noexcept
 static AFfileoffset
 audiofile_file_length(AFvirtualfile *vfile) noexcept
 {
-	AudioFileInputStream &afis = *(AudioFileInputStream *)vfile->closure;
+	AudioFileInputStream &afis = *static_cast<AudioFileInputStream *>(vfile->closure);
 	InputStream &is = afis.is;
 
 	return is.GetSize();
@@ -92,7 +92,7 @@ audiofile_file_length(AFvirtualfile *vfile) noexcept
 static AFfileoffset
 audiofile_file_tell(AFvirtualfile *vfile) noexcept
 {
-	AudioFileInputStream &afis = *(AudioFileInputStream *)vfile->closure;
+	AudioFileInputStream &afis = *static_cast<AudioFileInputStream *>(vfile->closure);
 	InputStream &is = afis.is;
 
 	return is.GetOffset();
@@ -110,7 +110,7 @@ static AFfileoffset
 audiofile_file_seek(AFvirtualfile *vfile, AFfileoffset _offset,
 		    int is_relative) noexcept
 {
-	AudioFileInputStream &afis = *(AudioFileInputStream *)vfile->closure;
+	AudioFileInputStream &afis = *static_cast<AudioFileInputStream *>(vfile->closure);
 	InputStream &is = afis.is;
 
 	offset_type offset = _offset;
@@ -129,7 +129,7 @@ audiofile_file_seek(AFvirtualfile *vfile, AFfileoffset _offset,
 static AFvirtualfile *
 setup_virtual_fops(AudioFileInputStream &afis) noexcept
 {
-	auto vf = (AFvirtualfile *)malloc(sizeof(AFvirtualfile));
+	auto vf = static_cast<AFvirtualfile *>(malloc(sizeof(AFvirtualfile)));
 	vf->closure = &afis;
 	vf->write = nullptr;
 	vf->read    = audiofile_file_read;
@@ -209,11 +209,9 @@ audiofile_stream_decode(DecoderClient &client, InputStream &is)
 	const auto audio_format = CheckAudioFormat(fh);
 	const auto total_time = audiofile_get_duration(fh);
 
-	const auto kbit_rate = (uint16_t)
-		(is.GetSize() * uint64_t(8) / total_time.ToMS());
+	const auto kbit_rate = uint16_t(is.GetSize() * uint64_t(8) / total_time.ToMS());
 
-	const auto frame_size = (unsigned)
-		afGetVirtualFrameSize(fh, AF_DEFAULT_TRACK, true);
+	const auto frame_size = unsigned(afGetVirtualFrameSize(fh, AF_DEFAULT_TRACK, true));
 
 	client.Ready(audio_format, true, total_time);
 

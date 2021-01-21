@@ -263,8 +263,8 @@ VorbisDecoder::OnOggPacket(const ogg_packet &_packet)
 		if (audio_format.IsDefined()) {
 			/* TODO: change the MPD decoder plugin API to
 			   allow mid-song AudioFormat changes */
-			if ((unsigned)vi.rate != audio_format.sample_rate ||
-			    (unsigned)vi.channels != audio_format.channels)
+			if (unsigned(vi.rate) != audio_format.sample_rate ||
+			    unsigned(vi.channels) != audio_format.channels)
 				throw std::runtime_error("Next stream has different audio format");
 		} else
 			SubmitInit();

@@ -132,5 +132,5 @@ DatabaseVisitorHelper::Commit()
 
 	/* now pass all songs to the original visitor callback */
 	for (const auto &song : songs)
-		original_visit_song((LightSong)song);
+		original_visit_song(LightSong(song));
 }

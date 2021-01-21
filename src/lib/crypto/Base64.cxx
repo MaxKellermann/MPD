@@ -50,7 +50,7 @@ DecodeBase64(WritableBuffer<void> out, StringView in)
 size_t
 DecodeBase64(WritableBuffer<void> out, const char *in)
 {
-	int nbytes = av_base64_decode((uint8_t *)out.data, in, out.size);
+	int nbytes = av_base64_decode(static_cast<uint8_t *>(out.data), in, out.size);
 	if (nbytes < 0)
 		throw MakeFfmpegError(nbytes, "Base64 decoder failed");
 

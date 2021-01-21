@@ -47,7 +47,7 @@ EventFD::Read() noexcept
 	assert(fd.IsDefined());
 
 	eventfd_t value;
-	return fd.Read(&value, sizeof(value)) == (ssize_t)sizeof(value);
+	return fd.Read(&value, sizeof(value)) == ssize_t(sizeof(value));
 }
 
 void

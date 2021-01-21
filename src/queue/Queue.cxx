@@ -56,7 +56,7 @@ Queue::GetNextOrder(unsigned _order) const noexcept
 void
 Queue::IncrementVersion() noexcept
 {
-	static unsigned long max = ((uint32_t) 1 << 31) - 1;
+	static unsigned long max = (uint32_t(1) << 31) - 1;
 
 	version++;
 
@@ -448,11 +448,11 @@ Queue::SetPriority(unsigned position, uint8_t priority, int after_order,
 
 	unsigned _order = PositionToOrder(position);
 	if (after_order >= 0) {
-		if (_order == (unsigned)after_order)
+		if (_order == unsigned(after_order))
 			/* don't reorder the current song */
 			return true;
 
-		if (_order < (unsigned)after_order) {
+		if (_order < unsigned(after_order)) {
 			/* the specified song has been played already
 			   - enqueue it only if its priority has been
 			   increased and is now bigger than the
@@ -497,11 +497,11 @@ Queue::SetPriorityRange(unsigned start_position, unsigned end_position,
 
 	bool modified = false;
 	int after_position = after_order >= 0
-		? (int)OrderToPosition(after_order)
+		? int(OrderToPosition(after_order))
 		: -1;
 	for (unsigned i = start_position; i < end_position; ++i) {
 		after_order = after_position >= 0
-			? (int)PositionToOrder(after_position)
+			? int(PositionToOrder(after_position))
 			: -1;
 
 		modified |= SetPriority(i, priority, after_order);

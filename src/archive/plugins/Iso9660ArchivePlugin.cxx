@@ -93,8 +93,7 @@ Iso9660ArchiveFile::Visit(char *path, size_t length, size_t capacity,
 	/* Iterate over the list of nodes that iso9660_ifs_readdir gives  */
 	CdioListNode_t *entnode;
 	_CDIO_LIST_FOREACH (entnode, entlist) {
-		auto *statbuf = (iso9660_stat_t *)
-			_cdio_list_node_data(entnode);
+		auto *statbuf = static_cast<iso9660_stat_t *>(_cdio_list_node_data(entnode));
 		const char *filename = statbuf->filename;
 		if (StringIsEmpty(filename) ||
 		    PathTraitsUTF8::IsSpecialFilename(filename))

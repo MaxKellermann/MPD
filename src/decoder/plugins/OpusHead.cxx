@@ -35,7 +35,7 @@ bool
 ScanOpusHeader(const void *data, size_t size, unsigned &channels_r,
 	       signed &output_gain_r, unsigned &pre_skip_r)
 {
-	const auto *h = (const OpusHead *)data;
+	const auto *h = static_cast<const OpusHead *>(data);
 	if (size < 19 || (h->version & 0xf0) != 0)
 		return false;
 

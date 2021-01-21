@@ -143,7 +143,7 @@ Bzip2InputStream::Read(std::unique_lock<Mutex> &, void *ptr, size_t length)
 
 	const ScopeUnlock unlock(mutex);
 
-	bzstream.next_out = (char *)ptr;
+	bzstream.next_out = static_cast<char *>(ptr);
 	bzstream.avail_out = length;
 
 	do {

@@ -129,7 +129,7 @@ ZzipArchiveFile::OpenStream(const char *pathname,
 {
 	ZZIP_FILE *_file = zzip_file_open(dir->dir, pathname, 0);
 	if (_file == nullptr) {
-		const auto error = (zzip_error_t)zzip_error(dir->dir);
+		const auto error = zzip_error_t(zzip_error(dir->dir));
 		switch (error) {
 		case ZZIP_ENOENT:
 			throw FormatFileNotFound("Failed to open '%s' in ZIP file",

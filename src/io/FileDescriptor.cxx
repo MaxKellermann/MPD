@@ -285,14 +285,14 @@ FileDescriptor::GetSize() const noexcept
 {
 	struct stat st;
 	return ::fstat(fd, &st) >= 0
-		? (long)st.st_size
+		? long(st.st_size)
 		: -1;
 }
 
 void
 FileDescriptor::FullRead(void *_buffer, std::size_t length)
 {
-	auto buffer = (uint8_t *)_buffer;
+	auto buffer = static_cast<uint8_t *>(_buffer);
 
 	while (length > 0) {
 		ssize_t nbytes = Read(buffer, length);
@@ -310,7 +310,7 @@ FileDescriptor::FullRead(void *_buffer, std::size_t length)
 void
 FileDescriptor::FullWrite(const void *_buffer, std::size_t length)
 {
-	auto buffer = (const uint8_t *)_buffer;
+	auto buffer = static_cast<const uint8_t *>(_buffer);
 
 	while (length > 0) {
 		ssize_t nbytes = Write(buffer, length);

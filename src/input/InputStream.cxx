@@ -124,7 +124,7 @@ InputStream::LockRead(void *ptr, size_t _size)
 void
 InputStream::ReadFull(std::unique_lock<Mutex> &lock, void *_ptr, size_t _size)
 {
-	auto *ptr = (uint8_t *)_ptr;
+	auto *ptr = static_cast<uint8_t *>(_ptr);
 
 	size_t nbytes_total = 0;
 	while (_size > 0) {

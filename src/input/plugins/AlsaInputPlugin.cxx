@@ -359,7 +359,7 @@ AlsaInputStream::ConfigureCapture(AudioFormat audio_format)
 	snd_pcm_hw_params_get_buffer_time_min(hw_params, &buffer_time_min, nullptr);
 	snd_pcm_hw_params_get_buffer_time_max(hw_params, &buffer_time_max, nullptr);
 	FormatDebug(alsa_input_domain, "buffer: size=%u..%u time=%u..%u",
-		    (unsigned)buffer_size_min, (unsigned)buffer_size_max,
+		    unsigned(buffer_size_min), unsigned(buffer_size_max),
 		    buffer_time_min, buffer_time_max);
 
 	snd_pcm_uframes_t period_size_min, period_size_max;
@@ -369,7 +369,7 @@ AlsaInputStream::ConfigureCapture(AudioFormat audio_format)
 	snd_pcm_hw_params_get_period_time_min(hw_params, &period_time_min, nullptr);
 	snd_pcm_hw_params_get_period_time_max(hw_params, &period_time_max, nullptr);
 	FormatDebug(alsa_input_domain, "period: size=%u..%u time=%u..%u",
-		    (unsigned)period_size_min, (unsigned)period_size_max,
+		    unsigned(period_size_min), unsigned(period_size_max),
 		    period_time_min, period_time_max);
 
 	/* choose the maximum possible buffer_size ... */
@@ -407,7 +407,7 @@ AlsaInputStream::ConfigureCapture(AudioFormat audio_format)
 					 snd_strerror(-err));
 
 	FormatDebug(alsa_input_domain, "buffer_size=%u period_size=%u",
-		    (unsigned)alsa_buffer_size, (unsigned)alsa_period_size);
+		    unsigned(alsa_buffer_size), unsigned(alsa_period_size));
 
 	snd_pcm_sw_params_t *sw_params;
 	snd_pcm_sw_params_alloca(&sw_params);

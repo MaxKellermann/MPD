@@ -30,7 +30,7 @@ Client::AllowFile(Path path_fs) const
 
 	throw ProtocolError(ACK_ERROR_PERMISSION, "Access denied");
 #else
-	if (uid >= 0 && (uid_t)uid == geteuid())
+	if (uid >= 0 && uid_t(uid) == geteuid())
 		/* always allow access if user runs his own MPD
 		   instance */
 		return;
@@ -41,7 +41,7 @@ Client::AllowFile(Path path_fs) const
 
 	const FileInfo fi(path_fs);
 
-	if (fi.GetUid() != (uid_t)uid && (fi.GetMode() & 0444) != 0444)
+	if (fi.GetUid() != uid_t(uid) && (fi.GetMode() & 0444) != 0444)
 		/* client is not owner */
 		throw ProtocolError(ACK_ERROR_PERMISSION, "Access denied");
 #endif

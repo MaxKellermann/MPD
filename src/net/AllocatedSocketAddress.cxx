@@ -59,7 +59,7 @@ AllocatedSocketAddress::SetSize(size_type new_size) noexcept
 
 	free(address);
 	size = new_size;
-	address = (struct sockaddr *)malloc(size);
+	address = static_cast<struct sockaddr *>(malloc(size));
 }
 
 #ifdef HAVE_UN
@@ -81,7 +81,7 @@ AllocatedSocketAddress::SetLocal(const char *path) noexcept
 
 	struct sockaddr_un *sun;
 	SetSize(sizeof(*sun) - sizeof(sun->sun_path) + path_length);
-	sun = (struct sockaddr_un *)address;
+	sun = reinterpret_cast<struct sockaddr_un *>(address);
 	sun->sun_family = AF_LOCAL;
 	memcpy(sun->sun_path, path, path_length);
 
@@ -102,14 +102,14 @@ AllocatedSocketAddress::SetPort(unsigned port) noexcept
 	switch (GetFamily()) {
 	case AF_INET:
 		{
-			auto &a = *(IPv4Address *)(void *)address;
+			auto &a = *static_cast<IPv4Address *>((void *)address);
 			a.SetPort(port);
 			return true;
 		}
 
 	case AF_INET6:
 		{
-			auto &a = *(IPv6Address *)(void *)address;
+			auto &a = *static_cast<IPv6Address *>((void *)address);
 			a.SetPort(port);
 			return true;
 		}

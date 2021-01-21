@@ -45,7 +45,7 @@ Timer::Add(size_t size)
 
 	// (size samples) / (rate samples per second) = duration seconds
 	// duration seconds * 1000000 = duration us
-	time += Time(((uint64_t)size * Time::period::den) / (Time::period::num * rate));
+	time += Time((static_cast<uint64_t>(size) * Time::period::den) / (Time::period::num * rate));
 }
 
 std::chrono::steady_clock::duration

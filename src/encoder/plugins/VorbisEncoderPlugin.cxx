@@ -249,7 +249,7 @@ VorbisEncoder::Write(const void *data, size_t length)
 	/* this is for only 16-bit audio */
 
 	interleaved_to_vorbis_buffer(vorbis_analysis_buffer(&vd, num_frames),
-				     (const float *)data,
+				     static_cast<const float *>(data),
 				     num_frames,
 				     audio_format.channels);
 
