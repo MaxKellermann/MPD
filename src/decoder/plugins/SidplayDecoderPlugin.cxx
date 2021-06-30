@@ -23,6 +23,7 @@
 #include "tag/Handler.hxx"
 #include "tag/Builder.hxx"
 #include "song/DetachedSong.hxx"
+#include "fs/NarrowPath.hxx"
 #include "fs/Path.hxx"
 #include "fs/AllocatedPath.hxx"
 #include "lib/icu/Converter.hxx"
@@ -104,9 +105,9 @@ sidplay_load_songlength_db(const Path path)
 {
 	auto db = std::make_unique<SidDatabase>();
 #ifdef HAVE_SIDPLAYFP
-	bool error = !db->open(path.c_str());
+	bool error = !db->open(NarrowPath(path));
 #else
-	bool error = db->open(path.c_str()) < 0;
+	bool error = db->open(NarrowPath(path)) < 0;
 #endif
 	if (error)
 		throw FormatRuntimeError("unable to read songlengths file %s: %s",
@@ -196,7 +197,7 @@ ParseContainerPath(Path path_fs) noexcept
 	const Path base = path_fs.GetBase();
 	unsigned track;
 	if (base.IsNull() ||
-	    (track = ParseSubtuneName(base.c_str())) < 1)
+	    (track = ParseSubtuneName(NarrowPath(base))) < 1)
 		return { AllocatedPath(path_fs), 1 };
 
 	return { path_fs.GetDirectoryName(), track };
@@ -244,9 +245,9 @@ sidplay_file_decode(DecoderClient &client, Path path_fs)
 
 	const auto container = ParseContainerPath(path_fs);
 #ifdef HAVE_SIDPLAYFP
-	SidTune tune(container.path.c_str());
+	SidTune tune(NarrowPath(container.path));
 #else
-	SidTuneMod tune(container.path.c_str());
+	SidTuneMod tune(NarrowPath(container.path));
 #endif
 	if (!tune.getStatus()) {
 #ifdef HAVE_SIDPLAYFP
@@ -561,9 +562,9 @@ sidplay_scan_file(Path path_fs, TagHandler &handler) noexcept
 	const unsigned song_num = container.track;
 
 #ifdef HAVE_SIDPLAYFP
-	SidTune tune(container.path.c_str());
+	SidTune tune(NarrowPath(container.path));
 #else
-	SidTuneMod tune(container.path.c_str());
+	SidTuneMod tune(NarrowPath(container.path));
 #endif
 	if (!tune.getStatus())
 		return false;
@@ -594,9 +595,9 @@ sidplay_container_scan(Path path_fs)
 	std::forward_list<DetachedSong> list;
 
 #ifdef HAVE_SIDPLAYFP
-	SidTune tune(path_fs.c_str());
+	SidTune tune((NarrowPath(path_fs)));
 #else
-	SidTuneMod tune(path_fs.c_str());
+	SidTuneMod tune((NarrrowPath(path_fs)));
 #endif
 	if (!tune.getStatus())
 		return list;

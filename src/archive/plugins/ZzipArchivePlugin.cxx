@@ -26,6 +26,7 @@
 #include "../ArchiveFile.hxx"
 #include "../ArchiveVisitor.hxx"
 #include "input/InputStream.hxx"
+#include "fs/NarrowPath.hxx"
 #include "fs/Path.hxx"
 #include "system/Error.hxx"
 #include "util/RuntimeError.hxx"
@@ -40,7 +41,7 @@ struct ZzipDir {
 	ZZIP_DIR *const dir;
 
 	explicit ZzipDir(Path path)
-		:dir(zzip_dir_open(path.c_str(), nullptr)) {
+		:dir(zzip_dir_open(NarrowPath(path), nullptr)) {
 		if (dir == nullptr)
 			throw FormatRuntimeError("Failed to open ZIP file %s",
 						 path.c_str());

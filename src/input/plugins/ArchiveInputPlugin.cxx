@@ -23,6 +23,7 @@
 #include "archive/ArchiveFile.hxx"
 #include "../InputStream.hxx"
 #include "fs/LookupFile.hxx"
+#include "fs/NarrowPath.hxx"
 #include "fs/Path.hxx"
 #include "Log.hxx"
 
@@ -54,5 +55,5 @@ OpenArchiveInputStream(Path path, Mutex &mutex)
 	}
 
 	return archive_file_open(arplug, l.archive)
-		->OpenStream(l.inside.c_str(), mutex);
+		->OpenStream(NarrowPath(l.inside), mutex);
 }

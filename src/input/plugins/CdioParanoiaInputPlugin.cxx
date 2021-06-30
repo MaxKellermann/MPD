@@ -31,6 +31,7 @@
 #include "util/Domain.hxx"
 #include "util/ByteOrder.hxx"
 #include "fs/AllocatedPath.hxx"
+#include "fs/NarrowPath.hxx"
 #include "Log.hxx"
 #include "config/Block.hxx"
 
@@ -195,7 +196,7 @@ input_cdio_open(const char *uri,
 		throw std::runtime_error("Unable find or access a CD-ROM drive with an audio CD in it.");
 
 	/* Found such a CD-ROM with a CD-DA loaded. Use the first drive in the list. */
-	const auto cdio = cdio_open(device.c_str(), DRIVER_UNKNOWN);
+	const auto cdio = cdio_open(NarrowPath(device), DRIVER_UNKNOWN);
 	if (cdio == nullptr)
 		throw std::runtime_error("Failed to open CD drive");
 

@@ -26,6 +26,7 @@
 #include "../ArchiveFile.hxx"
 #include "../ArchiveVisitor.hxx"
 #include "input/InputStream.hxx"
+#include "fs/NarrowPath.hxx"
 #include "fs/Path.hxx"
 #include "util/RuntimeError.hxx"
 #include "util/StringCompare.hxx"
@@ -43,7 +44,7 @@ struct Iso9660 {
 	iso9660_t *const iso;
 
 	explicit Iso9660(Path path)
-		:iso(iso9660_open(path.c_str())) {
+		:iso(iso9660_open(NarrowPath(path))) {
 		if (iso == nullptr)
 			throw FormatRuntimeError("Failed to open ISO9660 file %s",
 						 path.c_str());

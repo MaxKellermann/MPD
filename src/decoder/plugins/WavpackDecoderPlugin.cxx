@@ -23,6 +23,7 @@
 #include "input/InputStream.hxx"
 #include "pcm/CheckAudioFormat.hxx"
 #include "tag/Handler.hxx"
+#include "fs/NarrowPath.hxx"
 #include "fs/Path.hxx"
 #include "util/Alloc.hxx"
 #include "util/Math.hxx"
@@ -55,7 +56,7 @@ static WavpackContext *
 WavpackOpenInput(Path path, int flags, int norm_offset)
 {
 	char error[ERRORLEN];
-	auto *wpc = WavpackOpenFileInput(path.c_str(), error,
+	auto wpc = WavpackOpenFileInput(NarrowPath(path), error,
 					 flags, norm_offset);
 	if (wpc == nullptr)
 		throw FormatRuntimeError("failed to open WavPack file \"%s\": %s",
