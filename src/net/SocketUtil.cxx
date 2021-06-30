@@ -41,8 +41,11 @@ socket_bind_listen(int domain, int type, int protocol,
 	}
 #endif
 
+	if (domain == AF_INET6 && !fd.SetV6Only(true))
+		throw MakeSocketError("setsockopt() failed for V6ONLY");
+
 	if (!fd.SetReuseAddress())
-		throw MakeSocketError("setsockopt() failed");
+		throw MakeSocketError("setsockopt() failed for REUSEADDR");
 
 	if (!fd.Bind(address))
 		throw MakeSocketError("Failed to bind socket");
