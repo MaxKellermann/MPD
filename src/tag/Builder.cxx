@@ -63,12 +63,13 @@ TagBuilder::operator=(const TagBuilder &other) noexcept
 	/* copy all attributes */
 	duration = other.duration;
 	has_playlist = other.has_playlist;
-	items = other.items;
 
-	/* increment the tag pool refcounters */
+	RemoveAll();
+	items.reserve(other.items.size());
+
 	const std::lock_guard<Mutex> protect(tag_pool_lock);
 	for (auto i : items)
-		tag_pool_dup_item(i);
+		items.push_back(tag_pool_dup_item(i));
 
 	return *this;
 }
@@ -78,6 +79,8 @@ TagBuilder::operator=(TagBuilder &&other) noexcept
 {
 	duration = other.duration;
 	has_playlist = other.has_playlist;
+
+	RemoveAll();
 	items = std::move(other.items);
 
 	return *this;
@@ -92,7 +95,7 @@ TagBuilder::operator=(Tag &&other) noexcept
 	/* move all TagItem pointers from the Tag object; we don't
 	   need to contact the tag pool, because all we do is move
 	   references */
-	items.clear();
+	RemoveAll();
 	items.reserve(other.num_items);
 	std::copy_n(other.items, other.num_items, std::back_inserter(items));
 

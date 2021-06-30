@@ -28,9 +28,11 @@ extern Mutex tag_pool_lock;
 struct TagItem;
 struct StringView;
 
+[[nodiscard]]
 TagItem *
 tag_pool_get_item(TagType type, StringView value) noexcept;
 
+[[nodiscard]]
 TagItem *
 tag_pool_dup_item(TagItem *item) noexcept;
 
