@@ -343,15 +343,15 @@ playlist::GetCurrentPosition() const noexcept
 }
 
 int
-playlist::GetNextPosition() const noexcept
+playlist::GetNextPosition(unsigned index) const noexcept
 {
 	if (current < 0)
 		return -1;
 
 	if (queue.single != SingleMode::OFF && queue.repeat)
 		return queue.OrderToPosition(current);
-	else if (queue.IsValidOrder(current + 1))
-		return queue.OrderToPosition(current + 1);
+	else if (queue.IsValidOrder(current + index))
+		return queue.OrderToPosition(current + index);
 	else if (queue.repeat)
 		return queue.OrderToPosition(0);
 

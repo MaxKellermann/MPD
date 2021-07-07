@@ -115,7 +115,7 @@ struct playlist {
 	int GetCurrentPosition() const noexcept;
 
 	gcc_pure
-	int GetNextPosition() const noexcept;
+	int GetNextPosition(unsigned index) const noexcept;
 
 	/**
 	 * Returns the song object which is currently queued.  Returns
