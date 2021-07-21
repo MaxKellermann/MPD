@@ -29,9 +29,12 @@
 
 #include "UriUtil.hxx"
 #include "ASCII.hxx"
+#include "SplitString.hxx"
 
 #include <cassert>
 #include <cstring>
+
+#include <string_view>
 
 static const char *
 verify_uri_segment(const char *p) noexcept
@@ -106,5 +109,39 @@ uri_remove_auth(const char *uri) noexcept
 	   information */
 	std::string result(uri);
 	result.erase(auth - uri, at + 1 - auth);
+	return result;
+}
+
+std::string
+uri_squash_dot_segments(const char *uri) noexcept
+{
+	std::forward_list<std::string_view> path = SplitString(std::string_view(uri), '/');
+	path.remove_if([](const std::string_view &seg) { return seg == "."; });
+	path.reverse();
+
+	std::string result;
+
+	int segskips = 0;
+	auto it = path.begin();
+	while (it != path.end()) {
+		if (*it == "..") {
+			segskips++;
+			it++;
+			continue;
+		} else if (segskips != 0) {
+			segskips--;
+			it++;
+			continue;
+		}
+
+		result.insert(0, *it);
+
+		if (it != path.begin()) {
+			result.insert(it->length(), "/");
+		}
+
+		it++;
+	}
+
 	return result;
 }

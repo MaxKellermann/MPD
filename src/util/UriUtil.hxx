@@ -56,4 +56,12 @@ gcc_pure
 std::string
 uri_remove_auth(const char *uri) noexcept;
 
+/**
+ * Remove dot segments in the URI.  For example, uri_squash_dot_segments
+ * ("foo/bar/.././")=="foo/".
+ */
+gcc_pure
+std::string
+uri_squash_dot_segments(const char *uri) noexcept;
+
 #endif

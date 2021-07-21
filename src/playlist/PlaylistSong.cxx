@@ -24,6 +24,7 @@
 #include "fs/Traits.hxx"
 #include "song/DetachedSong.hxx"
 #include "util/UriExtract.hxx"
+#include "util/UriUtil.hxx"
 
 #include <algorithm>
 #include <string>
@@ -96,8 +97,14 @@ playlist_check_translate_song(DetachedSong &song, std::string_view base_uri,
 #endif
 
 	if (base_uri.data() != nullptr && !uri_has_scheme(uri) &&
-	    !PathTraitsUTF8::IsAbsolute(uri))
+	    !PathTraitsUTF8::IsAbsolute(uri)) {
 		song.SetURI(PathTraitsUTF8::Build(base_uri, uri));
+		uri = song.GetURI();
+	}
+
+	/* Remove dot segments */
+	std::string new_uri = uri_squash_dot_segments(uri);
+	song.SetURI(std::move(new_uri));
 
 	return playlist_check_load_song(song, loader);
 }
